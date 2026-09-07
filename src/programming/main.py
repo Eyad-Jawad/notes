@@ -41,7 +41,7 @@ def main() -> None:
                 text = text.replace(sm.text, new_link)
 
         with open(file_dir, 'w', encoding="utf-8") as f:
-            body = markdown.markdown(text)
+            body = markdown.markdown(text, extensions=["fence_code"])
             f.write(f"""
                     <!DOCTYPE html>
                     <html lang="en">
