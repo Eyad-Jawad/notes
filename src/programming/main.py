@@ -97,7 +97,7 @@ def main() -> None:
 def find_file_relative_path(filename: str, files: list[Path], root: Path) -> str:
     for file in files:
         if filename in str(file):
-            return quote(str(file.relative_to(root))[:-3])
+            return quote(str(file.relative_to(root))[:-3]) + ".html"
     return ""
 
 if __name__ == "__main__":
