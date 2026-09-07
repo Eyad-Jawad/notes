@@ -45,7 +45,7 @@ def main() -> None:
                 hash_symbol = re.match(r"(.*?)#(.*?)")
                 if hash_symbol:
                     display_name = hash_symbol.group(1)
-                    file_name += "#" + hash_symbol.group(2)
+                    relative_file_name += "#" + hash_symbol.group(2)
 
                 new_link = f"[{display_name}]({LINK}{relative_file_name})"
                 text = text.replace(sm.text, new_link)
