@@ -1,0 +1,76 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Relationships</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>Relationships</h1>
+                        <p><p>The most basic form of a relationship in <code>SQLAlchemy</code> is a <code>ForeignKey</code>, where it is used as a reference for <code>join</code> queries and the sort, but you can go a step further and put the whole other object in it:</p>
+<pre><code class="language-Python">
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+class Table(Base):
+    __tablename__ = &quot;table&quot;
+
+    table2_id: Mapped[int] = mapped_column(ForeignKey(&quot;table2.id&quot;))
+
+    table2: Mapped[Table2] = relationship(
+        back_populates=&quot;table2&quot;,
+    )
+
+</code></pre>
+<p>and in Table2:</p>
+<pre><code class="language-Python">
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+class Table2(Base):
+    __tablename__ = &quot;table2&quot;
+
+    table_id: Mapped[int] = mapped_column(ForeignKey(&quot;table.id&quot;))
+
+    table: Mapped[Table] = relationship(
+        back_populates=&quot;table&quot;,
+    )
+
+</code></pre>
+<p>If you have a type checker on it'll show an error at <code>Mapped[]</code>, this <a href="https://eyad-jawad.github.io/notes/Python/Tools/Notes/mypy.html#Some Errors">mypy</a> should solve it.
+If the relationship above has an owner, you can do something like:</p>
+<pre><code>table2: Mapped[Table2] = relationship(
+    back_populates=&quot;table2&quot;,
+    cascade=&quot;all, delete&quot;,
+)
+
+</code></pre>
+<p>Which will wipe out all of the other objects where this object is referenced, be careful where you write this, because it will delete everything.</p>
+<p>In this kind of situation, sometimes calling <code>select</code> alone won't let you be able to access the other objects, due to optimizations and the sort, so you should call it like this:</p>
+<pre><code class="language-Python">
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
+stmt = (
+    select(Table)
+    .options(selectinload(Table.table2))
+)
+
+</code></pre></p>
+                    </article>
+
+                </body>
+                </html>
+            

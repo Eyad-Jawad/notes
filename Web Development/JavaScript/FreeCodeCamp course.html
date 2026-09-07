@@ -1,0 +1,179 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>FreeCodeCamp course</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>FreeCodeCamp course</h1>
+                        <p><h3 id="variable-decleration">Variable decleration</h3>
+<p>you can declare a variable saying :</p>
+<pre><code class="language-javascript">var a = 0; /* this will declare the variable in the function scope, 
+the whole function */
+let a = 0; /* unlike this that will narrow its 
+scope to the {} it's in, the current block */
+const a = 0; // like let, but const
+a = 0; // this will declare it globally, to the whole file
+</code></pre>
+<p>Data Types: undefined, boolean, null, string, number, symbol, and object
+you can also declare a variable then assign a value to it later</p>
+<p>NOTE: The semicolon ";" is not necessary, but you should very well use it</p>
+<p>console.log() is like print in other languages, in a website however, it'll show stuff in the console when you click inspect the code or something idk</p>
+<pre><code class="language-javascript">console.log(&quot;lol&quot;);
+</code></pre>
+<p>to run a JS file you could do:</p>
+<pre><code class="language-bash">node file.js
+</code></pre>
+<p>for strings we have:</p>
+<pre><code class="language-javascript">let somethingLength = &quot;Something&quot;.length;
+</code></pre>
+<p>you can treat strings in JS just like you do in C, aka; use [], but if you remember, strings are consts, you can change the whole string, but not only a part of it</p>
+<p>Function:</p>
+<pre><code class="language-javascript">function example(someInputNumber) {
+    someInputNumber--;
+    return someInputNumber;
+}
+</code></pre>
+<p>arrays in JS can be anything:</p>
+<pre><code class="language-javascript">var ex = [&quot;lol&quot;, 32, [3]];
+</code></pre>
+<p>you can modify an array's elements in JS:</p>
+<pre><code class="language-javascript">ex[1] = 33;
+</code></pre>
+<p>you can append elements to an array using the push method:</p>
+<pre><code class="language-javascript">ex.push(33);
+lastElement = ex.pop();
+firstElement = ex.shift();
+ex.unshift(&quot;Lol&quot;); // I think it's clear what this does
+</code></pre>
+<pre><code class="language-javascript">console.log(JSON.stringify([1, 2, 3]));
+</code></pre>
+<pre><code class="language-javascript">if (idkWhat == 1) {
+    console.log(&quot;lol, idk&quot;);
+}
+</code></pre>
+<p>the equality operator == in JS will sometimes convert the values into a common type, the strict equality operator will not:</p>
+<pre><code class="language-javascript">a = 3 == '3'  // true
+b = 3 === '3' // false
+</code></pre>
+<p>it's better to just use === all of the time
+same with inequality:</p>
+<pre><code class="language-javascript">a = 3 != '3'  // false
+b = 3 !== '3' // true
+</code></pre>
+<p>other than that, logical operators are identical to C (since it's based on it)</p>
+<pre><code class="language-javascript">if (something) {
+    console.log(&quot;lol&quot;);
+} else if (idk) {
+    console.log(&quot;lol, idk&quot;);
+}
+</code></pre>
+<p>the shorthand if is also the same, (here it is if you can't reacall it):</p>
+<pre><code class="language-javascript">(idkWhat) ? doIfTrue() : doIfFalse();
+</code></pre>
+<p>the switch-case syntax is also identical, and it uses the strict equality</p>
+<pre><code class="language-javascript">let something = {
+    &quot;Laugh&quot;: &quot;lol&quot;,
+    &quot;Laugh Hard&quot;: &quot;LMAO&quot;,
+    idkWhat: &quot;Idk what sir&quot;
+};
+console.log(something.Laugh); // can also be used to add an element
+console.log(something[&quot;Laugh Hard]&quot;);
+delete something.Laugh;
+if (!something.hasOwnProperty(&quot;Laugh&quot;)) {
+    console.log(&quot;It was deleted&quot;); // this will print
+}
+</code></pre>
+<p>a way to copy an object:</p>
+<pre><code class="language-javascript">let somethingTwo = JSON.parse(JSON.stringify(something));
+</code></pre>
+<p>while, do while, and for loops are nearly identical with of C except that you say var (or let) instead of int in for loops</p>
+<p>to convert string to an int, use :</p>
+<pre><code class="language-javascript">let num = parseInt(&quot;23&quot;);
+let binaryToInt = parseInt(&quot;1011&quot;, 2);
+</code></pre>
+<p>you can write "use strict" plainly in a JS file to let the compiler catch even the smallest errors and bugs</p>
+<pre><code class="language-Javascript">&quot;use strict&quot;;
+</code></pre>
+<p>you can't change a const array, however, you could change every element in it individually and mutate the array, to prevent that we can do:</p>
+<pre><code class="language-javascript">Object.freeze(something);
+</code></pre>
+<p>you can assign function to variables to do cool things (they say):</p>
+<pre><code class="language-javascript">let thisGuy = function() {
+    return true;
+}
+
+let thatguy = () =&gt; {
+    return true;
+}
+// those two above are identical
+// and if you have a function that returns one thing only you could do this:
+let lastGuy = () =&gt; true;
+</code></pre>
+<p>in JS there's something called the rest operator, which takes the input and puts them into an array, when the input is changing in size:</p>
+<pre><code class="language-javascript">const sum = (() =&gt; {
+    return function sum(...args) {
+        return args.reduce((a, b) =&gt; a + b, 0);
+    };
+}) ();
+console.log(sum(1, 2 ,3 ,4 ,5));
+console.log(sum(32, 2));
+</code></pre>
+<p>chat gpt says that when you use {} with an arrow function, it turns it into an expression, and that () at the end calls the function immediately after, and this design quirck is called <strong>IIFE</strong> (Immediately Invoked Function Expression).</p>
+<p>we can use something called the spraed operator to copy arrays:</p>
+<pre><code class="language-javascript">arr2 = [...arr1]; // this will have the same problems that 
+// require deep copy in Python
+</code></pre>
+<p>we can do this in C (I think):</p>
+<pre><code class="language-C">int a, b, c = obj.x, obj.y, obj.z;
+</code></pre>
+<p>in JS we can do this:</p>
+<pre><code class="language-javascript">const {x : a, y : b, z : c} = obj;
+</code></pre>
+<p>this is called destructuring, we can do this as well:</p>
+<pre><code class="language-javascript">const [a, , , b] = [1, 2, 3, 4]; // a = 1, b = 4
+[a, b] = [b, a]; // you could also swap vars using it
+</code></pre>
+<p>you can use the stuff above inside function parameters, or with one and another to do cool stuff, idk</p>
+<pre><code class="language-javascript">const idk = function({x, y}) {
+    return x + y;
+}
+console.log(obj); // some onject with many attrs, but we only 
+// needed and used two of them
+</code></pre>
+<p>we can use backticks as a text formatter in JS with multiline stuff and variables:</p>
+<pre><code class="language-javascript">let guy = {name: &quot;homan&quot;, age: 88};
+const greet = `I'm &quot;${guy.name}&quot;
+I come to conquer this planet before I turn 100 in ${100 - guy.age} years!`;
+console.log(greet);
+</code></pre>
+<p>if you do return {varName} it'll return an obj with the key varName and value as its value
+you could also do it when declaring an obj, or when at that, one of the keys is a function you could ignore setting a function, as you would do in an array</p>
+<p>you can export {aFunction} in some file to import {aFunction} from "thatFile"</p>
+<pre><code class="language-javascript">import a* as idkWhat from &quot;file.js&quot;;
+</code></pre>
+<p>there's also default import/export</p>
+<h3 id="math">Math</h3>
+<p>we have a lot of interseting math function:</p>
+<pre><code class="language-javascript">Math.round(3.8);
+Math.floor(3.3);
+Math.random(); // we can use some tricks with this btw
+</code></pre></p>
+                    </article>
+
+                </body>
+                </html>
+            

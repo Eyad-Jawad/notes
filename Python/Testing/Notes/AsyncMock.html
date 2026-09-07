@@ -1,0 +1,47 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>AsyncMock</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>AsyncMock</h1>
+                        <p><p>You can find <code>AsyncMock</code> in the built-in <code>unittest.mock</code>, it is failry similar to <a href="https://eyad-jawad.github.io/notes/Python/Testing/Notes/MagicMock.html">MagicMock</a>, but async, some function call async functions, or methods, that's why you need <code>AsyncMock</code>, the only difference between <code>AsyncMock</code> and <a href="https://eyad-jawad.github.io/notes/Python/Testing/Notes/MagicMock.html">MagicMock</a> is in the <code>assert</code> statements:</p>
+<pre><code class="language-Python">
+from unittest.mock import AsyncMock
+
+
+@pytest.mark.asyncio 
+async def test_some_func():
+    arg = AsyncMock()
+
+    &quot;&quot;&quot;
+        After some stuff
+    &quot;&quot;&quot;
+    await some_func(arg)
+
+    arg.method.assert_awaited_once()
+    arg.other_method.assert_awaited_once_with(1)
+    arg.random_method.assert_not_awaited
+
+</code></pre>
+<p>And of course, since you will be calling an <code>async</code> function, you need the test to be <code>async</code> itself: <a href="https://eyad-jawad.github.io/notes/Python/Testing/Notes/Async%20Testing.html">Async Testing</a>
+As it is the case with <a href="https://eyad-jawad.github.io/notes/Python/Testing/Notes/MagicMock.html">MagicMock</a>, all the leading methods are <code>AsyncMock</code></p></p>
+                    </article>
+
+                </body>
+                </html>
+            

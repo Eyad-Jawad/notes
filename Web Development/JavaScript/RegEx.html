@@ -1,0 +1,110 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>RegEx</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>RegEx</h1>
+                        <p><p>This is about RegEx in javascript, on w3schools</p>
+<p>RegExp are be used for:
+- Text searching
+- Text replacing
+- Text validation</p>
+<h6 id="regex-syntax">RegEx Syntax</h6>
+<p><code>/pattern/modifier flags;</code></p>
+<p><a href="https://eyad-jawad.github.io/notes/Images/Pasted%20image%2020260506095003.png">Pasted image 20260506095003.png</a></p>
+<pre><code class="language-javascript">let idx = str.search(/something/);
+let strs = str.match(/something/);
+let str2 = str.replace(/something/, &quot;another thing&quot;);
+</code></pre>
+<p>There's also RegEx alteration, which is simply or ( | ):</p>
+<pre><code class="language-javascript">let idx = str.search(/something|anotherThing|idk/);
+</code></pre>
+<h5 id="flags">Flags</h5>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/g</td>
+<td>Performs a global match (find all)</td>
+</tr>
+<tr>
+<td>/i</td>
+<td>Performs case-insensitive matching</td>
+</tr>
+<tr>
+<td>/u</td>
+<td>Enables Unicode support (new 2015)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://eyad-jawad.github.io/notes/Images/Pasted%20image%2020260506210213.png">Pasted image 20260506210213.png</a></p>
+<pre><code class="language-javascript">let ans = str.match(/lol/g);
+</code></pre>
+<h5 id="metacharacters">Metacharacters</h5>
+<p>They are characters with a special meaning.</p>
+<pre><code>\d : Matches Digits
+\D : Matches non-numeric characters
+\w : Matches Words (characters, numbers, and underscores)
+\W : Matches characters other than the ones above
+\s : Matches Spaces
+\S : Matches non-space characters
+</code></pre>
+<h6 id="quantifiers">Quantifiers</h6>
+<pre><code>x*   : Matches zero or more occurrences of x
+x+   : Matches one or more occurrences of x
+x?   : Matches zero or one occurrences of x
+x{n} : Matches n occurences of x
+</code></pre>
+<p><code>{x, y}</code> means it occurs <code>n</code> times where <code>n</code> is in the range of <code>x, y</code>
+if you do <code>{n, }</code> it means that a character must occur n times at least
+<code>{, n}</code> this is clear I think</p>
+<p><code>.*x</code> this is called greedy matching, it'll match everything that ends with x
+<code>.*?x</code> this is called lazy matching, it'll match the first thing that ends with x only</p>
+<h5 id="assertions">Assertions</h5>
+<p><a href="https://eyad-jawad.github.io/notes/Images/Pasted%20image%2020260506100255.png">Pasted image 20260506100255.png</a></p>
+<p>these check like, if a string starts with something for <code>^</code>, or if it ends with something for <code>$</code>, </p>
+<p>if you do <code>[^xy]</code> then it'll find everything except for x or y
+if you do <code>^[xy]</code> it means x or y in the beggining of the character</p>
+<p><code>$</code> will check for strings at the end of the expression or string</p>
+<p><code>x(?=y)</code> means match x that comes before y
+<code>x(?!y)</code> means match x that doesn't come beofre y
+<code>(?&lt;=y)x</code> means match x that comes after y
+<code>(?&lt;!y)x</code> means match x that doesn't come after y</p>
+<h5 id="characters-classes">Characters Classes</h5>
+<p><a href="https://eyad-jawad.github.io/notes/Images/Pasted%20image%2020260506100647.png">Pasted image 20260506100647.png</a></p>
+<p><code>[.]</code> means select every character</p>
+<h5 id="grouping">Grouping</h5>
+<p>we use <code>()</code> for grouping expressions, for many reasons, one reason is referencing, which is like making a variable of that group:</p>
+<pre><code class="language-RegEx">/(lol)-\1 (lmao)-\2/
+</code></pre>
+<p>this will match <code>lol-lol lmao-lmao</code>, notice that we used <code>\1</code> and <code>\2</code> as if they were variables</p>
+<p>you can prevent capturing by writing <code>?:</code> at the beggining:</p>
+<pre><code class="language-RegEx">/(?:lol)/
+</code></pre>
+<p>you can use what's called a <code>pipe character</code> or simply <code>|</code>, with grouping, which from the looks of it is <code>or</code>, you can use it without grouping but I don't understand how that works</p>
+<p>to use characters that mean something in RegEx, use <code>\</code> before them: <code>\+</code>, etc.</p></p>
+                    </article>
+
+                </body>
+                </html>
+            

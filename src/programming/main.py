@@ -56,7 +56,7 @@ def main() -> None:
                     relative_file_name += "#" + hash_symbol.group(2)
 
                 new_link = f"[{display_name}]({WEBSITE_LINK}{relative_file_name})"
-                if new_link.endswith(".png"):
+                if new_link.endswith(".png)"):
                     new_link = f"[{display_name}]({REPO_LINK}{relative_file_name})"
 
                 text = text.replace(sm.text, new_link)

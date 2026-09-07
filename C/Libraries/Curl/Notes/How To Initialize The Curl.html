@@ -1,0 +1,58 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>How To Initialize The Curl</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>How To Initialize The Curl</h1>
+                        <p><h2 id="the-variable">The Variable</h2>
+<p>First you need to declare the curl variable itself:</p>
+<pre><code class="language-C">#include &lt;curl/curl.h&gt;
+
+CURL *curl;
+curl = curl_easy_init();
+
+</code></pre>
+<p>But before that you need to initialize the global curl first:</p>
+<pre><code class="language-C">
+CURLcode res;
+res = curl_global_init(CURL_GLOBAL_ALL);
+
+if (res != CURLE_OK) {
+    ...
+}
+
+</code></pre>
+<h2 id="the-linkwebsite">The Link/Website</h2>
+<p>To provide curl with the website you want to "curl" or scrape, call this:</p>
+<pre><code class="language-C">
+curl_easy_setopt(curl, CURLOPT_URL, url);
+
+</code></pre>
+<p>And that's it, the <code>url</code> needs to be a <code>char *</code> though</p>
+<h2 id="cleanup">Cleanup</h2>
+<p>Then after you finished using it call:</p>
+<pre><code class="language-C">
+curl_easy_cleanup(curl);
+curl_global_cleanup();
+
+</code></pre></p>
+                    </article>
+
+                </body>
+                </html>
+            
