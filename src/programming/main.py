@@ -5,7 +5,8 @@ from ripgrep_rs import search_structured
 from urllib.parse import quote
 from pathlib import Path
 
-LINK = "https://eyad-jawad.github.io/notes/"
+WEBSITE_LINK = "https://eyad-jawad.github.io/notes/"
+REPO_LINK = "https://github.com/Eyad-Jawad/notes/"
 
 def main() -> None:
     search_path = Path(__file__).resolve().parent.parent.parent
@@ -54,7 +55,10 @@ def main() -> None:
                 if hash_symbol:
                     relative_file_name += "#" + hash_symbol.group(2)
 
-                new_link = f"[{display_name}]({LINK}{relative_file_name})"
+                new_link = f"[{display_name}]({WEBSITE_LINK}{relative_file_name})"
+                if new_link.endswith(".png"):
+                    new_link = f"[{display_name}]({REPO_LINK}{relative_file_name})"
+
                 text = text.replace(sm.text, new_link)
 
         with open(file_dir, 'w', encoding="utf-8") as f:
