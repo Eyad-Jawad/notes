@@ -41,34 +41,41 @@ def main() -> None:
                 text = text.replace(sm.text, new_link)
 
         with open(file_dir, 'w', encoding="utf-8") as f:
-            body = markdown.markdown(text, extensions=["fence_code"])
+            body = markdown.markdown(
+                text,
+                extensions=[
+                    "fenced_code",
+                    "tables",
+                    "toc",
+                ],
+            )
             f.write(f"""
-                    <!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>{filename[:-5]}</title>
-                    </head>
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>{filename[:-5]}</title>
+                </head>
 
-                    <body style="
-                        max-width: 800px;
-                        margin: 60px auto;
-                        padding: 0 20px;
-                        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                        line-height: 1.7;
-                        color: #222;
-                        background: #fff;
-                    ">
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
 
-                        <article>
-                            <h1>{filename[:-5]}</h1>
-                            <p>{body}</p>
-                        </article>
+                    <article>
+                        <h1>{filename[:-5]}</h1>
+                        <p>{body}</p>
+                    </article>
 
-                    </body>
-                    </html>
-                """)
+                </body>
+                </html>
+            """)
 
 
 def find_file_relative_path(filename: str, files: list[Path], root: Path) -> str:
