@@ -4,8 +4,12 @@ Author: Eyad Jawad
 License: MIT  
 
 ---
+This repository contains reference notes on various programming and computer science topics that I personnaly use and reference to when I need something simple and factual.    
 
-# Notes
+You can use them for learning, but that's not their main use, the main purpose is to read them to remember how to do something, or make sure that something works like this.    
+
+
+# Notes/Topics
 
 The hubs of notes:  
 
@@ -20,7 +24,8 @@ Other scattered notes:
 3. [Docker](https://eyad-jawad.github.io/notes/Docker)  
 
 ---
-TODO: Fix images
+FIXME: Images
 FIXME: hash in display name (in relationships specifically)
 FIXME: Pandas in Pandas Table error in relative file_name func
+TOOD: Make the code better
 `- Eyad`

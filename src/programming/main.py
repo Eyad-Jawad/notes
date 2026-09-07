@@ -15,7 +15,8 @@ def main() -> None:
         text = ""
         with open(note, 'r') as f:
             text = f.read()
-
+        
+        text = text.replace("![[", "[[")
 
         filename = note.name[:-2] + "html"
         if note.name == "README.md":
@@ -40,6 +41,12 @@ def main() -> None:
                     file_name = display_name = nested_match.group(1)
 
                 relative_file_name = find_file_relative_path(file_name, notes, search_path)
+
+                hash_symbol = re.match(r"(.*?)#(.*?)")
+                if hash_symbol:
+                    display_name = hash_symbol.group(1)
+                    file_name += "#" + hash_symbol.group(2)
+
                 new_link = f"[{display_name}]({LINK}{relative_file_name})"
                 text = text.replace(sm.text, new_link)
 
