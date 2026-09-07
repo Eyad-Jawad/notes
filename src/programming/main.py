@@ -18,6 +18,9 @@ def main() -> None:
 
 
         filename = note.name[:-2] + "html"
+        if note.name == "README.md":
+            filename = "index.html"
+
         file_dir = note.parent / filename
 
         matches = search_structured(

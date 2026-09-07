@@ -20,5 +20,7 @@ Other scattered notes:
 3. [Docker](https://eyad-jawad.github.io/notes/Docker)  
 
 ---
-
+TODO: Fix images
+FIXME: hash in display name (in relationships specifically)
+FIXME: Pandas in Pandas Table error in relative file_name func
 `- Eyad`
