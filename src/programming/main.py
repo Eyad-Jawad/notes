@@ -10,7 +10,7 @@ LINK = "https://eyad-jawad.github.io/notes/"
 def main() -> None:
     search_path = Path(__file__).resolve().parent.parent.parent
 
-    notes = list(Path(search_path).rglob("**"))
+    notes = [p for p in Path(search_path).rglob("*") if p.is_file()]
     for note in notes:
         if not str(note).endswith(".md"):
             continue
