@@ -42,7 +42,7 @@ def main() -> None:
 
                 relative_file_name = find_file_relative_path(file_name, notes, search_path)
 
-                hash_symbol = re.match(r"(.*?)#(.*?)")
+                hash_symbol = re.match(r"(.*?)#(.*?)", sm.text)
                 if hash_symbol:
                     display_name = hash_symbol.group(1)
                     relative_file_name += "#" + hash_symbol.group(2)
