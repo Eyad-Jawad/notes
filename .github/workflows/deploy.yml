@@ -61,8 +61,16 @@ jobs:
 
           find . \
             -type f \
-            -name '*.html' \
+            \( -name '*.html' -o \
+               -name '*.png' -o \
+               -name '*.jpg' -o \
+               -name '*.jpeg' -o \
+               -name '*.gif' -o \
+               -name '*.webp' -o \
+               -name '*.svg' \
+            \) \
             -not -path './.git/*' \
+            -not -path './_site/*' \
             -exec cp --parents '{}' _site/ \;
 
       - name: Upload Pages artifact

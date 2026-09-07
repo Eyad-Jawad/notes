@@ -6,7 +6,6 @@ from urllib.parse import quote
 from pathlib import Path
 
 WEBSITE_LINK = "https://eyad-jawad.github.io/notes/"
-REPO_LINK = "https://github.com/Eyad-Jawad/notes/"
 
 def main() -> None:
     search_path = Path(__file__).resolve().parent.parent.parent
@@ -56,8 +55,6 @@ def main() -> None:
                     relative_file_name += "#" + hash_symbol.group(2)
 
                 new_link = f"[{display_name}]({WEBSITE_LINK}{relative_file_name})"
-                if not new_link.endswith(".md)"):
-                    new_link = f"[{display_name}]({REPO_LINK}{relative_file_name})"
 
                 text = text.replace(sm.text, new_link)
 
