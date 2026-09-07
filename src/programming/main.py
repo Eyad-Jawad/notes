@@ -10,8 +10,11 @@ LINK = "https://eyad-jawad.github.io/notes/"
 def main() -> None:
     search_path = Path(__file__).resolve().parent.parent.parent
 
-    notes = list(Path(search_path).rglob("*.md"))
+    notes = list(Path(search_path).rglob("**"))
     for note in notes:
+        if not str(note).endswith(".md"):
+            continue
+
         text = ""
         with open(note, 'r') as f:
             text = f.read()
@@ -39,6 +42,9 @@ def main() -> None:
                 else:
                     nested_match = re.match(r"\[\[(.*?)\]\]", sm.text)
                     file_name = display_name = nested_match.group(1)
+
+                if "png" in file_name:
+                    pass
 
                 relative_file_name = find_file_relative_path(file_name, notes, search_path)
 
