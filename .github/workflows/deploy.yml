@@ -39,6 +39,7 @@ jobs:
         run: |
           git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" \
             | grep -E '\.md$' \
+            | grep -v '^README\.md$' \
             | xargs -r git rm --ignore-unmatch
 
       - name: Commit generated files
