@@ -43,14 +43,15 @@ def main() -> None:
                     nested_match = re.match(r"\[\[(.*?)\]\]", sm.text)
                     file_name = display_name = nested_match.group(1)
 
-                if "png" in file_name:
-                    pass
+                hash_symbol = re.match(r"(.*?)#(.*)", file_name)
+                if hash_symbol:
+                    if file_name == display_name:
+                        display_name = hash_symbol.group(1)
+                    file_name = hash_symbol.group(1)
 
                 relative_file_name = find_file_relative_path(file_name, notes, search_path)
 
-                hash_symbol = re.match(r"(.*?)#(.*?)", sm.text)
                 if hash_symbol:
-                    display_name = hash_symbol.group(1)
                     relative_file_name += "#" + hash_symbol.group(2)
 
                 new_link = f"[{display_name}]({LINK}{relative_file_name})"
@@ -97,7 +98,11 @@ def main() -> None:
 def find_file_relative_path(filename: str, files: list[Path], root: Path) -> str:
     for file in files:
         if filename in str(file):
-            return quote(str(file.relative_to(root))[:-3]) + ".html"
+            output = quote(str(file.relative_to(root)))
+            if output.endswith(".png"):
+                return output
+            
+            return output[:-2] + "html"
     return ""
 
 if __name__ == "__main__":

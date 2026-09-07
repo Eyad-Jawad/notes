@@ -1,0 +1,53 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>String Formatting</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>String Formatting</h1>
+                        <p><p>Besides (or as well as) the <code>printf</code> string formatting (<a href="https://eyad-jawad.github.io/notes/C/C%20accordding%20to%20the%20roadmap.sh%20and%20knowledge%20skips/Notes/Printf%28%29.html">Printf()</a>), there are ways to format a string itself, not while printing it:</p>
+<h3 id="sprintf">sprintf</h3>
+<p>This function is under the <code>stdio.h</code> library, and it takes care of the formatting only:</p>
+<pre><code class="language-C">
+char buf[256];
+sprintf(buf, &quot;string %s\n&quot;, &quot;messi&quot;);
+
+</code></pre>
+<h3 id="asprintf">asprintf</h3>
+<p>This function takes care of the allocation as well as the formatting, you'd do:</p>
+<pre><code class="language-C">
+#define GNU_SOURCE
+#include &lt;stdio.h&gt;
+
+char *buf = nullptr;
+
+int len = asprintf(&amp;buf, &quot;string %s&quot;, &quot;messi&quot;);
+if (len == -1) {
+    printf(&quot;error occurred&quot;);
+    free(buf);
+    return nullptr;
+}
+
+return name;
+
+</code></pre>
+<p>know that you need to <code>free()</code> it later after you're done with it, because it's dynamically allocated</p></p>
+                    </article>
+
+                </body>
+                </html>
+            

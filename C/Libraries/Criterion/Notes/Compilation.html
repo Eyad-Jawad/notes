@@ -1,0 +1,32 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Compilation</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>Compilation</h1>
+                        <p><p>To compile the tests you need to write all the test files and sources files excluding where the main entry point lies, and add the library flag:</p>
+<pre><code class="language-Bash">
+gcc -Werror tests/test.c src/source.c -o tests -lcriterion
+
+</code></pre>
+<p>In here, <code>-Werror</code> is an example of a flag, and after that is the source files, then at the end the flag of the library</p></p>
+                    </article>
+
+                </body>
+                </html>
+            

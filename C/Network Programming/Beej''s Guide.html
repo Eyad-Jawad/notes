@@ -1,0 +1,418 @@
+
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Beej''s Guide</title>
+                </head>
+
+                <body style="
+                    max-width: 800px;
+                    margin: 60px auto;
+                    padding: 0 20px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    line-height: 1.7;
+                    color: #222;
+                    background: #fff;
+                ">
+
+                    <article>
+                        <h1>Beej''s Guide</h1>
+                        <p><h2 id="the-source-httpsbeejusguidebgnetpdfbgnet_usl_c_1pdf"><strong>The source:</strong> https://beej.us/guide/bgnet/pdf/bgnet_usl_c_1.pdf</h2>
+<p>Sockets are UNIX file descriptors, descriptors are numbers attached to files, so sockets are files, there are many types of sockets, one type is Raw Sockets, but that doesn't matter for now, anohter two types are:</p>
+<ul>
+<li>Datagram Sockets: Or <code>SOCK_DGRAM</code>, which are connectionless sockets, means you can skip <code>connect()</code></li>
+<li>Stream Sockets: Or <code>SOCK_STREAM</code>, which are two way sockets, and things sent are recived in order and error free, used in <code>ssh</code>, <code>telnet</code>, and <code>HTTP</code>.</li>
+</ul>
+<p>the stream sockets above achive that using the "Transmision Control Protocol", or known as "TCP", the datagram sockets are not as reliable as the former, the data may arrive, but if it does it'll error free, it uses what's known as the "User Datagram Protocol", as known as "UDP"</p>
+<p>They are connectionless because you don't have to maintain a connection in it as you'd have to do with the stream sockets</p>
+<p>One might use a UDP over TCP for speed when that's the priority</p>
+<p><a href="https://eyad-jawad.github.io/notes/Images/Pasted%20image%2020260606175123.png">Pasted image 20260606175123.png</a></p>
+<h3 id="internet-protocol-version-4-and-6">Internet Protocol version 4, and 6</h3>
+<p>I'm sure you know but verision 4 is the older 32 bit IPs, and version 6 is the newer 128 bit IPs:</p>
+<pre><code class="language-bash">192.0.2.111 # IPv4
+2001:0db8:c9d2:aee5:73e3:934a:a5ae:9551 # IPv6
+</code></pre>
+<p>you can also use the colons to compress the zeros or ignore the leading zeros as well, there's also a way to use IPv4 in IPv6, which is using this pattern in a compatibility mode:</p>
+<pre><code class="language-bash">::ffff:IPv4 Address
+</code></pre>
+<p>there's something called a netmask, that you run on your IP in a bitwise-and address to get your host's IP address, which is just a bunch of ones followed by zeros, that's why it was changed later to just  a slash followed by the number of ones:</p>
+<pre><code>(E.g. with that netmask, if your IP is 192.0.2.12, then your network is
+192.0.2.12   AND 255.255.255.0 which gives 192.0.2.0.
+the new one:  192.0.2.12/30
+</code></pre>
+<p>there's also the port which is a 16 bit number representing the use of this specific route, the os might give privliges to some ports depending on their use</p>
+<p>you know about the endians and bit order, the big is the normal one, the little is the reverse one, in 8 bits form, and appearantly there's something called Network Byte Order as well, at that you'd always run a function to order things:</p>
+<p><a href="https://eyad-jawad.github.io/notes/Images/Pasted%20image%2020260614120610.png">Pasted image 20260614120610.png</a></p>
+<p>short being 2 bytes, and long being 4 bytess, host is the local endian, and network is the more universal one per se, Basically, you’ll want to convert the numbers to Network Byte Order before they go out on the wire, and convert them to Host Byte Order as they come in off the wire</p>
+<h3 id="structs">structs</h3>
+<p>a socket descriptor is <code>int</code>
+then we have a socket named <code>addrinfo</code> which has to do with host name lookups, service name lookups, and other things, and it is genarally the first socket you'd call when making a connection:</p>
+<pre><code class="language-C">struct addrinfo {
+    int              ai_flags;     // AI_PASSIVE, AI_CANONNAME, etc.
+    int              ai_family;    // AF_INET, AF_INET6, AF_UNSPEC
+    int              ai_socktype;  // SOCK_STREAM, SOCK_DGRAM
+    int              ai_protocol;  // use 0 for &quot;any&quot;
+    size_t           ai_addrlen;   // size of ai_addr in bytes
+    struct sockaddr *ai_addr;      // struct sockaddr_in or _in6
+    char            *ai_canonname; // full canonical hostname
+
+    struct addrinfo *ai_next;      // linked list, next node
+}; // I think ai means addrinfo?
+</code></pre>
+<pre><code class="language-C">struct sockaddr {
+    unsigned short sa_family;   // address family, AF_xxx
+    char           sa_data[14]; // 14 bytes of protocol address
+};
+</code></pre>
+<p><code>AF_INET</code> is IPv4, and <code>AF_INET6</code> is IPv6, <code>sa_data</code> stores the destinationa address and port</p>
+<pre><code class="language-C">// (IPv4 only--see struct sockaddr_in6 for IPv6)
+struct sockaddr_in {
+    short int          sin_family;      // Address family, AF_INET
+    unsigned short int sin_port;        // Port number
+    struct             in_addrsin_addr; // Internet address
+    unsigned char      sin_zero[8];     // Same size as struct sockaddr
+};
+
+// Internet address (a structure for historical reasons)
+struct in_addr {
+    uint32_t s_addr; // that's a 32-bit int (4 bytes)
+};
+</code></pre>
+<p>that last variable is for padding it, it'll be just zeros idk why, and <code>sin_port</code> must be in Network Byte Order</p>
+<pre><code class="language-C">// (IPv6 only--see struct sockaddr_in and struct in_addr for IPv4)
+struct sockaddr_in6 {
+    u_int16_t       sin6_family;   // address family, AF_INET6
+    u_int16_t       sin6_port;     // port, Network Byte Order
+    u_int32_t       sin6_flowinfo; // IPv6 flow information
+    struct in6_addr sin6_addr;     // IPv6 address
+    u_int32_t       sin6_scope_id; // Scope ID
+};
+
+struct in6_addr {
+    unsigned char   s6_addr[16];   // IPv6 address
+};
+</code></pre>
+<p>then we have a storage unit large enough to fit both IPs, and then cast then IP into it's respective struct:</p>
+<pre><code class="language-C">struct sockaddr_storage {
+    sa_family_t ss_family; // address family
+
+    // all this is padding, implementation specific, ignore it:
+    char    __ss_pad1[_SS_PAD1SIZE];
+    int64_t __ss_align;
+    char    __ss_pad2[_SS_PAD2SIZE];
+};
+</code></pre>
+<p>and in the end you can use a function <code>in_pton()</code> (pton stands for presentation network, or printable network) to convert  <code>sockaddr_in</code> to <code>in_addr</code>, or <code>sockaddr_in6</code> to <code>in6_addr</code>:</p>
+<pre><code class="language-C">inet_pton(AF_INET, &quot;10.12.110.57&quot;, &amp;(sa.sin_addr));
+inet_pton(AF_INET6, &quot;2001:db8:63b3:1::3490&quot;, &amp;(sa6.sin6_addr));
+</code></pre>
+<p>and this function will return <code>-1</code> on error and <code>0</code> if the address is not messed up, and <code>1</code> for good, this function transforms number addresses to binary presentation, if you want it the other way around there's a function called <code>inet_ntop()</code> for that:
+ ```C
+// IPv4:</p>
+<p>char ip4[INET_ADDRSTRLEN];// space to hold the IPv4 string
+struct sockaddr_in sa;    // pretend this is loaded with something
+inet_ntop(AF_INET, &amp;(sa.sin_addr), ip4, INET_ADDRSTRLEN);
+printf("The IPv4 address is: %s\n", ip4);</p>
+<p>// IPv6:</p>
+<p>char ip6[INET6_ADDRSTRLEN]; // space to hold the IPv6 string
+struct sockaddr_in6 sa6;    // pretend this is loaded with something
+inet_ntop(AF_INET6, &amp;(sa6.sin6_addr), ip6, INET6_ADDRSTRLEN);
+printf("The address is: %s\n", ip6);
+ ```</p>
+<p>obviously, these only work with IP number addresses, they won't work with hostnames like <code>www.youtube.com</code>, you'll need something we'll discover in the future named: <code>getaddrinfo()</code></p>
+<p>Now then, how to make system calls:</p>
+<pre><code class="language-C">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netdb.h&gt;
+
+int getaddrinfo(const char *node, // e.g. &quot;www.example.com&quot; or IP
+                const char *service, // e.g. &quot;http&quot; or port number
+                const struct addrinfo *hints,
+                struct addrinfo **res);
+</code></pre>
+<p>it returns back a pointer to a linkd list, in <code>res</code>, ans <code>hints</code> points to a struct of <code>addrinfo</code> with the relative info filled, this is an example of a server that listens to an IP at port 3490:</p>
+<pre><code class="language-C">int status;
+struct addrinfo hints;
+struct addrinfo *servinfo; // will point to the results
+
+memset(&amp;hints, 0, sizeof hints); // make sure the struct is empty
+hints.ai_family = AF_UNSPEC;     // don't care IPv4 or IPv6
+hints.ai_socktype = SOCK_STREAM; // TCP stream sockets
+hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
+
+if ((status = getaddrinfo(NULL, &quot;3490&quot;, &amp;hints, &amp;servinfo)) != 0) {
+    fprintf(stderr, &quot;gai error: %s\n&quot;, gai_strerror(status));
+    exit(1);
+}
+
+// servinfo now points to a linked list of 1 or more
+// struct addrinfos
+// ... do everything until you don't need servinfo anymore ....
+
+freeaddrinfo(servinfo); // free the linked-list
+</code></pre>
+<p>you can also use <code>getaddrinfo()</code> alongside some magic and <code>inet_ntop()</code> to get IP addresses:</p>
+<pre><code class="language-C">char ipstr[INET6_ADDRSTRLEN];
+for (p = res; p != NULL; p = p-&gt;ai_next) {
+void *addr;
+struct sockaddr_in *ipv4;
+struct sockaddr_in6 *ipv6;
+
+if (p-&gt;ai_family == AF_INET) {
+    ipv4 = (struct sockaddr_in *) p-&gt;ai_addr;
+    addr = &amp;(ipv4-&gt;sin_addr);
+} else {
+    ipv6 = (struct sockaddr_in6 *) p-&gt;ai_addr;
+    addr = &amp;(ipv6-&gt;sin6_addr);
+}
+inet_ntop(p-&gt;ai_family, addr, ipstr, sizeof(ipstr));
+printf(&quot;%s\n&quot;, ipstr);
+</code></pre>
+<p>this is how a socket system call is done:</p>
+<pre><code class="language-C">int socket(int domain, int type, int protocol);
+</code></pre>
+<p>domain is either IPv4 or IPv6, type is about the socket type and the protocol is TCP or UDP, you could hardcode them, but one is advised to use constans like:
+Domain: <code>PF_INET</code>, <code>PF_INET6</code>
+Type: <code>SOCK_STREAM</code>, <code>SOCK_DGRAM</code>
+Protocol: <code>0</code> for proper protocol, or call <code>getprotobyname()</code> to use a specified protocol</p>
+<p><code>AF_INET</code>, and <code>AF_INET6</code> are used in <code>sockaddr_in</code>, or <code>sockaddr_in6</code>, you could use the attribue <code>ai_family</code> and call it a day though:</p>
+<pre><code class="language-C">int s = socket(res-&gt;ai_family, res-&gt;ai_socktype, res-&gt;ai_protocol);
+</code></pre>
+<p>this function will simply return a socket descriptor</p>
+<p>this is the call for <code>bind()</code> which is used to associate a specific port with a socket:</p>
+<pre><code class="language-C">int bind(int sockfd, struct sockaddr *addr, int addrlen);
+</code></pre>
+<p><code>sockfd</code> is the socket file descriptor than we get as a return value from the funciton <code>socket()</code></p>
+<p>you can use <code>AI_PASSIVE</code> for <code>ai_flags</code> but it would bind the socket to the local IP address, then you'd put NULL in <code>getaddrinfo()</code>, else don't use the flag and put a proper IP address in the parameter</p>
+<p>know that all ports less than <code>1024</code> are reserved, you can use unused ones up to <code>65535</code></p>
+<p>the <code>connect()</code> call is the same as <code>bind()</code>:</p>
+<pre><code class="language-C">int connect(int sockfd, struct sockaddr *addr, int addrlen);
+</code></pre>
+<p><code>addr</code> here contains the destination info; port and IP, <code>addrlen</code> is the length of the <code>addr</code> in bytes</p>
+<p>both <code>connect()</code> and  and <code>bind()</code> return <code>-1</code> on error and set the global variable <code>errno</code> to the error's value</p>
+<p>bind is about the local port, while connect is about the destination port</p>
+<p>there's a fucntion that listens to calls and holds a queue of the calls, usually it's capped at 20, but you can set it:</p>
+<pre><code class="language-C">int listen(int sockfd, int backlog);
+</code></pre>
+<p>the queue is the number of calls that'll wait until to accept them</p>
+<p>then accept will return a new soccket descriptor ready to do <code>send()</code> and <code>recv()</code> requests with the <code>connnect()</code>ed IP, the original socket descriptor will continue to <code>listen()</code> and  queue other calls:</p>
+<pre><code class="language-C">int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+</code></pre>
+<p><code>addr</code> is said to be a ptr to a <code>sockaddr_storage</code>, usually.</p>
+<pre><code class="language-C">getaddrinfo();
+socket();
+bind();
+listen();
+accept();
+</code></pre>
+<p>some code to demonstrate:</p>
+<pre><code class="language-C">#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netdb.h&gt;
+
+#define MYPORT &quot;3490&quot; // the port users will be connecting to
+#define BACKLOG 10 // how many pending connections queue holds
+
+int main(void)
+{
+    struct sockaddr_storage their_addr;
+    socklen_t addr_size;
+    struct addrinfo hints, *res;
+    int sockfd, new_fd;
+    // !! don't forget your error checking for these calls !!
+    // first, load up address structs with getaddrinfo():
+
+    memset(&amp;hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC; // use IPv4 or IPv6, whichever
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE; // fill in my IP for me
+
+    getaddrinfo(NULL, MYPORT, &amp;hints, &amp;res);
+
+    // make a socket, bind it, and listen on it:
+    sockfd = socket(res-&gt;ai_family, res-&gt;ai_socktype, res-&gt;ai_protocol);
+    bind(sockfd, res-&gt;ai_addr, res-&gt;ai_addrlen);
+    listen(sockfd, BACKLOG);
+
+    // now accept an incoming connection:   
+    addr_size = sizeof their_addr;
+    new_fd = accept(sockfd, (struct sockaddr *)&amp;their_addr, &amp;addr_size);
+
+    // ready to communicate on socket descriptor new_fd!
+    .
+    .
+    .
+}
+</code></pre>
+<p>programs will sleep while waiting for <code>recv()</code> and <code>send()</code>, which are used for stream sockets or connected datagram sockets, unconnected datagrams sockets use <code>sendto()</code> and <code>recvfrom()</code></p>
+<pre><code class="language-C">int send(int sockfd, const void *msg, int len, int flags);
+</code></pre>
+<p><code>sockfd</code> here is the one you'll send to, <code>msg</code> is the pointer to what you want to send, <code>void</code> in it is a plalceholder, it could be anything, and <code>len</code> is it's length in bytes, and this function will return the number of bytes sent which might be less than <code>len</code>, <code>-1</code> is returned and <code>errno</code> is set on error</p>
+<pre><code class="language-C">int recv(int sockfd, void *buf, int len, int flags);
+</code></pre>
+<p><code>sockfd</code> is to read from, this will return <code>-1</code> on error, and <code>0</code> on disconnection from the other end</p>
+<p>as mentioned before, unconnected datagram sockets use these:</p>
+<pre><code class="language-C">int sendto(int sockfd, const void *msg, int flags, unsigned int flag, struct sockaddr *to, socklen_t tolen);
+</code></pre>
+<pre><code class="language-C">int recvfrom(int sockfd, void *buf, unsigned int flags, struct sockaddr *from, int *fromlen);
+</code></pre>
+<p>when you're done with a socket, close it and free the linked list that is <code>getaddrinfo()</code>:</p>
+<pre><code class="language-C">close(sockfd);
+</code></pre>
+<p>this closes it both ways, for more control use:</p>
+<pre><code class="language-C">int shutdown(int sockfd, int how);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th><code>how</code></th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Further receives are disallowed</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Further sends are disallowed</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Further sends and receives are disallowed (like close())</td>
+</tr>
+</tbody>
+</table>
+<p>it return <code>0</code> on success, and <code>-1</code> on error, with errno set accordingly</p>
+<p>know that shutdown only changes the usability of the socket, only <code>close()</code> closes it appropriatly</p>
+<pre><code class="language-C">int getpeername(int sockfd, struct sockaddr *addr, int *addrlen);
+</code></pre>
+<p>this will return the network address so you could use <code>inet_ntop()</code> and then use <code>getnameinfo()</code> or <code>gethostbyaddr()</code></p>
+<pre><code class="language-C">#include &lt;unistd.h&gt;
+int gethostname(char *hostname, size_t size);
+</code></pre>
+<p>this function is to get the name of the machine on which the script runs, then you get use <code>getaddrinfo()</code> to get the IP address
+The arguments are simple: <code>hostname</code> is a pointer to an array of chars that will contain the <code>hostname</code> upon the function’s return, and <code>size</code> is the length in bytes of the <code>hostname</code> array.</p>
+<p>Please refer to <code>https://github.com/Eyad-Jawad/Serverless-Data-Communiacator.git</code>  for implementation of server and client using TCP </p>
+<p>In UDP you'd need a listener that await for a connection, and it is the same in TCP, <code>getaddrinfo()</code>, <code>socket()</code>, <code>bind()</code>, and then <code>recvfrom()</code> and that's it! But remember to substitute <code>hints.ai_socktype = SOCK_STREAM</code>  to <code>SOCK_DGRAM</code>
+Same with the talker which represents the server here, it starts with <code>getaddrinfo()</code>, <code>socket()</code>,  and then <code>sendto()</code> and that's it! If you do connect then you can use <code>send()</code> and <code>recv()</code> not <code>sendto()</code> or <code>recvfrom()</code></p>
+<p>many functions do <code>blocking</code>, that is, they are set to sleep until data arrive, like socket descriptors, <code>accept()</code> and all of <code>recv()</code>, you can set it otherwise:</p>
+<pre><code class="language-C">#include &lt;unistd.h&gt;
+#include &lt;fcntl.h&gt;
+
+sockfd = socket(PF_INET, SOCK_STREAM, 0);
+fcntl(sockfd, F_SETFL, O_NOBLOCK);
+</code></pre>
+<p>By setting a socket to non-blocking, you can effectively “poll” the socket for information. If you try to read from a non-blocking socket and there’s no data there, it’s not allowed to block— it will return <code>-1</code> and <code>errno</code> will be set to <code>EAGAIN</code> or <code>EWOULDBLOCK</code>.</p>
+<p><code>poll()</code> is used to monitor sockets and see which one is ready to recive data, it is ineffecient when there are a lot of connections so you're ought to use <code>libevent</code> library</p>
+<pre><code class="language-C">
+#include &lt;poll.h&gt;
+
+struct pollfd {
+    int fd;        // the socket descriptor
+    short events;  // bitmap of events we're interested in
+    short revents; // on return, bitmap of events that occurred
+};
+
+int poll(struct pollfd fds[], nfds_t nfds, int timeout);
+// you can pass timeout in ms, 
+// or a negative value if you want to wait for ever
+
+</code></pre>
+<p>The events field is the bitwise-OR of the following:</p>
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POLLIN</td>
+<td>Alert me when data is ready to <code>recv()</code> on this socket.</td>
+</tr>
+<tr>
+<td>POLLOUT</td>
+<td>Alert me when I can <code>send()</code> data to this socket without blocking.</td>
+</tr>
+<tr>
+<td>POLLHUP</td>
+<td>Alert me when the remote closed the connection.</td>
+</tr>
+</tbody>
+</table>
+<p>then you can  check <code>revents</code> to check for the event:</p>
+<pre><code class="language-C">
+struct pollfd pfds[1];
+
+pfds[0].fd = 0;
+pfds[0].events = POLLIN;
+
+numEvents = poll(pfds, 1, 2500);
+
+if (numEvents == 0)
+    printf(&quot;Poll timed out\n&quot;);
+
+else if (pfds[0].revents &amp; POLLIN)
+    printf(&quot;Socket %d is ready to read&quot;, pfds[0].fd);
+
+else
+    printf(&quot;Error occurred: %d\n&quot;, pfds[0].revents);
+
+</code></pre>
+<p>if you want to delete an element, set <code>fd</code> to a negative value and <code>poll()</code> will ignore it</p>
+<p>there's a function called <code>select()</code> that does a similar job to <code>poll()</code>, it monitors sockets and tells you if one of them is ready for reading, writing, or have raised an error, and it is also slow with big connections:</p>
+<pre><code class="language-C">#include &lt;sys/time.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+
+int select(int numfds, fd_set *readfds, fd_set *writefds,
+    fd_set *exceptfds, struct timeval *timeout);
+
+</code></pre>
+<p>if you want to know if a socket is ready to read, add <code>0</code> which is <code>STDIN</code> and the file descriptor to the set <code>readfds</code>, and <code>numfds</code> must be set to the highest <code>sockfd + 1</code></p>
+<p>when the function <code>select()</code> returns, you can check using one of these functions (<code>FD_ISSET()</code>) because the sets will be modified in respect:</p>
+<p><a href="https://eyad-jawad.github.io/notes/Images/Pasted%20image%2020260704140733.png">Pasted image 20260704140733.png</a></p>
+<pre><code class="language-C">
+struct timeval {
+    int tv_sec;  // seconds
+    int tv_usec; // microseconds
+};
+
+</code></pre>
+<p>use this struct to set a timelimit for the function, If you set the fields in your struct timeval to 0 , select() will timeout immediately, effectively polling all the file descriptors in your sets. If you set the parameter timeout to NULL, it will never timeout, and will wait until the first file descriptor is ready. Finally, if you don’t care about waiting for a certain set, you can just set it to NULL in the call to select()</p>
+<p>Quick note to all you Linux fans out there: sometimes, in rare circumstances, Linux’s select() can return “ready-to-read” and then not actually be ready to read! This means it will block on the read() after the select() says it won’t! Why you little—! Anyway, the workaround solution is to set the O_NONBLOCK flag on the receiving socket so it errors with EWOULDBLOCK (which you can just safely ignore if it occurs). See the fcntl() reference page for more info on setting a socket to non-blocking.</p>
+<p>you have grazed on <code>sendall()</code> so no introductions needed:</p>
+<pre><code class="language-C">
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+int sendall(int s, char *buf, int *len) {
+    int total = 0;        // how many bytes we've sent
+    int bytesleft = *len; // how many we have left to send
+    int n;
+
+    while(total &lt; *len) {
+        n = send(s, buf+total, bytesleft, 0);
+        if (n == -1) { break; }
+        total += n;
+        bytesleft -= n;
+    }
+
+    *len = total; // return number actually sent here   
+    return n==-1?-1:0; // return -1 on failure, 0 on success
+}
+
+</code></pre>
+<p>if you want to send variable length data like <code>int</code>s or <code>float</code>s use data encapsulation, which there are libraries for that</p>
+<p>you can use <code>htons()</code> or <code>ntohs()</code> for <code>int</code>, but not for <code>float</code></p></p>
+                    </article>
+
+                </body>
+                </html>
+            
