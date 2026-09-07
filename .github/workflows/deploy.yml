@@ -1,0 +1,78 @@
+name: Build and deploy notes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.md"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv sync --locked
+
+      - name: Generate HTML
+        run: uv run python src/programming/main.py
+
+      - name: Delete Markdown files from this commit
+        run: |
+          git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" \
+            | grep -E '\.md$' \
+            | xargs -r git rm --ignore-unmatch
+
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Build notes"
+            git push
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir _site
+
+          find . \
+            -type f \
+            -name '*.html' \
+            -not -path './.git/*' \
+            -exec cp --parents '{}' _site/ \;
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./_site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages
