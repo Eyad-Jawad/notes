@@ -1,0 +1,1 @@
+In C, some types are aligned in memory to achive quicker access time, there are a set of rules to it, for example `int` memory location value must be divisible by 4, `double` must be divisible by 8, `char` can be anywhere, in general you won't encounter any of this but you can find the api for it in `C11`'s `alignas`.

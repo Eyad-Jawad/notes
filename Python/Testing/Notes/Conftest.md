@@ -1,0 +1,1 @@
+`conftest.py` is a file that sits in the desired directory of test, so that all test files in that directory can share the same [[Fixtures]], that's it to be honest.

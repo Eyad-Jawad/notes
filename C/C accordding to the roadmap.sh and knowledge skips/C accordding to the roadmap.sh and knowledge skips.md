@@ -1,0 +1,8 @@
+1. [[Printf()]]
+2. [[Data Types]]
+3. [[Switch Case Note]]
+4. [[Variadic Functions]]
+5. [[Assigning Structs]]
+6. [[Enums]]
+7. [[Unions]]
+

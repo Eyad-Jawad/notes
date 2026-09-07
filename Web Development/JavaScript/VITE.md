@@ -1,0 +1,1 @@
+Nothing to see here, just do vite build inside scripts:build and do npm run build, meh
