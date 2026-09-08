@@ -69,12 +69,13 @@ def match_file(filename: str, referncer_filename: str, index: dict[str, list[Pat
     mx = 0
     idx = 0
     target_file = Path(filename)
+
     match = index.get(target_file.stem, [ROOT])
     for i, file in enumerate(match):
         ra = ratio(str(file), referncer_filename)
         if ra > mx:
+            mx = ra
             idx = i
-        mx = max(ra, mx)
 
     return match[idx].relative_to(ROOT)
 
