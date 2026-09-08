@@ -43,15 +43,12 @@ def main() -> None:
                     fir, sec = breakdown_reference(sm.text)
                     hash_symbol, fir, sec = hash_stuff(fir, sec)
 
-                    if ".png" in sm.text:
-                        pass
-
                     file_path = quote(str(match_file(fir, str(file), index)))
                     if file_path.endswith(".md"):
                         file_path = file_path[:-2] + "html"
 
                     if sm.text in images:
-                        text.replace(sm.text, f"[[{file_path}]]")
+                        text = text.replace(sm.text, f"[[{file_path}]]")
                         continue
 
                     if hash_symbol:
@@ -96,7 +93,7 @@ def match_file(filename: str, referncer_filename: str, index: dict[str, list[Pat
             idx = i
         mx = max(ra, mx)
 
-    return list(match)[idx].relative_to(ROOT)
+    return match[idx].relative_to(ROOT)
 
 
 def build_index(dir) -> dict[str, list[Path]]:
