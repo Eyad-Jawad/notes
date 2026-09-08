@@ -43,7 +43,7 @@ def main() -> None:
                     fir, sec = breakdown_reference(sm.text)
                     hash_symbol, fir, sec = hash_stuff(fir, sec)
 
-                    file_path = quote(str(match_file(fir, str(file), index)))
+                    file_path = quote(str(match_file(fir, str(file), index)))[:-2] + "html"
 
                     if sm.text in images:
                         text.replace(sm.text, f"[[{file_path}]]")
