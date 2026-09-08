@@ -7,14 +7,22 @@ from urllib.parse import quote
 from pathlib import Path
 
 WEBSITE_LINK = "https://eyad-jawad.github.io/notes/"
+ROOT = None
 
 def main() -> None:
     search_path = Path(__file__).resolve().parent.parent.parent
-    index = build_index(search_path)
+
+    global ROOT
+    ROOT = search_path
+
+    index = build_index(ROOT)
     for key, value in index.items():
         for file in value:
             if file.suffix != ".md": 
                 continue
+
+            if file.name == "111test_file.md":
+                pass
 
             with open(file, 'r') as f:
                 text = f.read()
@@ -47,8 +55,8 @@ def main() -> None:
                     if hash_symbol:
                         file_path += '#' + quote(hash_symbol.group(2))
                     
-                    new_link = f"[{sec}]({file_path})"
-                    text.replace(sm.text, new_link)
+                    new_link = f"[{sec}]({WEBSITE_LINK}{file_path})"
+                    text = text.replace(sm.text, new_link)
 
             html_filename = make_html_filename(str(file))
             write_html_file(file, text, html_filename)
@@ -78,14 +86,14 @@ def hash_stuff(f: str, s: str) -> tuple[re.Match, str, str]:
 def match_file(filename: str, referncer_filename: str, index: dict[str, list[Path]]) -> Path:
     mx = 0
     idx = 0
-    match = index.get(filename, [""])
+    match = index.get(filename, [ROOT])
     for i, file in enumerate(match):
         ra = ratio(str(file), referncer_filename)
         if ra > mx:
             idx = i
         mx = max(ra, mx)
 
-    return list(match)[idx]
+    return list(match)[idx].relative_to(ROOT)
 
 
 def build_index(dir) -> dict[str, list[Path]]:
