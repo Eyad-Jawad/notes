@@ -21,9 +21,6 @@ def main() -> None:
             if file.suffix != ".md": 
                 continue
 
-            if file.name == "111test_file.md":
-                pass
-
             with open(file, 'r') as f:
                 text = f.read()
 
@@ -68,7 +65,7 @@ def breakdown_reference(reference: str) -> tuple[str, str]:
     if match:
         return match.group(1), match.group(2)        
 
-    return reference, reference
+    return reference[2:-2], reference[2:-2]
 
 
 def hash_stuff(f: str, s: str) -> tuple[re.Match, str, str]:
