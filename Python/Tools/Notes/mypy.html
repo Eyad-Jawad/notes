@@ -1,0 +1,50 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>mypy</title>
+            </head>
+
+            <body style="
+                max-width: 800px;
+                margin: 60px auto;
+                padding: 0 20px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                line-height: 1.7;
+                color: #222;
+                background: #fff;
+            ">
+
+                <article>
+                    <h1>mypy</h1>
+                    <p><p><code>mypy</code> is a static type checker, means it doesn't execute the prorgam while checking for types, it will not allow type casting to the same variable, redefinitions, or wrong type hints, to you use it you have to install it via <code>pip</code> or <code>uv</code>.</p>
+<pre><code class="language-bash">
+mypy .
+uv run mypy .
+
+</code></pre>
+<h3 id="some-errors">Some Errors</h3>
+<p>Sometimes if some import type when immmported will cause porblems, you can do:</p>
+<pre><code class="language-Python">
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import module
+
+</code></pre>
+<h3 id="pyprojecttoml-configuration">pyproject.toml Configuration</h3>
+<p>You can configure it to target a specific version:</p>
+<pre><code class="language-toml">
+pyproject.toml:
+
+[tool.mypy]
+python_version = &quot;3.11&quot;
+
+</code></pre></p>
+                </article>
+
+            </body>
+            </html>
+        

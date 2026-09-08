@@ -1,0 +1,159 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Git</title>
+            </head>
+
+            <body style="
+                max-width: 800px;
+                margin: 60px auto;
+                padding: 0 20px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                line-height: 1.7;
+                color: #222;
+                background: #fff;
+            ">
+
+                <article>
+                    <h1>Git</h1>
+                    <p><h2 id="key-git-concepts">Key Git Concepts</h2>
+<ul>
+<li><strong>Repository:</strong> A folder where Git tracks your project and its history.</li>
+<li><strong>Clone:</strong> Make a copy of a remote repository on your computer.</li>
+<li><strong>Stage:</strong> Tell Git which changes you want to save next.</li>
+<li><strong>Commit:</strong> Save a snapshot of your staged changes.</li>
+<li><strong>Branch:</strong> Work on different versions or features at the same time.</li>
+<li><strong>Merge:</strong> Combine changes from different branches.</li>
+<li><strong>Pull:</strong> Get the latest changes from a remote repository.</li>
+<li><strong>Push:</strong> Send your changes to a remote repository.</li>
+</ul>
+<h2 id="git-configure">Git Configure</h2>
+<pre><code class="language-shell">git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;Email@example.com&quot;
+</code></pre>
+<ul>
+<li><strong>System</strong> (all users): <code>git config --system</code></li>
+<li><strong>Global</strong> (current user): <code>git config --global</code></li>
+<li><strong>Local</strong> (current repo): <code>git config --local</code>
+ordered ascendingly </li>
+</ul>
+<pre><code class="language-shell">git config --list
+git config user.name
+</code></pre>
+<p>you could write the specific setting to see its value like user.name above</p>
+<p>to remove a setting you could use <code>--unset</code> </p>
+<pre><code class="language-shell">git config --global --unset
+</code></pre>
+<p>set a default name for the branch:</p>
+<pre><code class="language-shell">git config --global init.defaultBranch main
+</code></pre>
+<h2 id="git-commands">Git Commands</h2>
+<pre><code class="language-shell">git init
+</code></pre>
+<p>makes a .git files that starts working in the folder</p>
+<h3 id="staging-commands">Staging Commands</h3>
+<ul>
+<li><code>git add &lt;file&gt;</code> - Stage a file</li>
+<li><code>git add --all</code> or <code>git add -A</code> - Stage all changes</li>
+<li><code>git status</code> - See what is staged</li>
+<li><code>git restore --staged &lt;file&gt;</code> - Unstage a file</li>
+</ul>
+<h3 id="committing-commands">Committing Commands</h3>
+<p>Here are some key commands for commits:
+- <code>git commit -m "message"</code> - Commit staged changes with a message
+- <code>git commit -a -m "message"</code> - Commit all tracked changes (skip staging)
+- <code>git log</code> - See commit history
+- <code>git log --oneline</code> For a shorter view
+- <code>git log --stat</code> To see which files changed in each commit
+If you just type <code>git commit</code> (no <code>-m</code>), your default editor will open so you can write a detailed, multi-line message
+- <strong>Create an empty commit:</strong><br />
+<code>git commit --allow-empty -m "Start project"</code>
+- <strong>Use previous commit message (no editor):</strong><br />
+<code>git commit --no-edit</code>
+- <strong>Quickly add staged changes to last commit, keep message:</strong><br />
+<code>git commit --amend --no-edit</code>
+ - <strong>Accidentally committed the wrong files?</strong><br />
+    You can use <code>git reset --soft HEAD~1</code> to undo the last commit and keep your changes staged.</p>
+<pre><code class="language-shell">git push
+</code></pre>
+<p>pushes the committed changes to the host (platform like GitHub, GitLab, or etc.)</p>
+<h3 id="tagging">Tagging</h3>
+<p>We use tagging as a bookmark for a special commit or something:
+- <code>git tag &lt;tagname&gt;</code> - Create a lightweight tag
+- <code>git tag -a &lt;tagname&gt; -m "message"</code> - Create an annotated tag
+- <code>git tag &lt;tagname&gt; &lt;commit-hash&gt;</code> - Tag a specific commit
+- <code>git tag</code> - List tags
+- <code>git show &lt;tagname&gt;</code> - Show tag details</p>
+<ul>
+<li><strong>Annotated Tag:</strong> Stores author, date, and message. Recommended for releases and sharing with others.</li>
+<li><strong>Lightweight Tag:</strong> Just a simple name for a commit (no extra info, like a bookmark).</li>
+</ul>
+<p>tags are local, you can push them using:</p>
+<pre><code class="language-shell">git push origin v1.0 
+git push --tags
+</code></pre>
+<p>know that you have to specify, pushing only will not tags
+to delete them:</p>
+<pre><code class="language-shell">git tag -d v1.0
+git origin push --delete tag v1.0
+</code></pre>
+<p>to replace or change a tag:</p>
+<pre><code class="language-shell">git push --force origin v1.0 
+git tag -f v1.0 &lt;commit hash&gt;
+</code></pre>
+<h3 id="stashing">Stashing</h3>
+<ul>
+<li><code>git stash</code> - Stash your changes</li>
+<li><code>git stash push -m "message"</code> - Stash with a message</li>
+<li><code>git stash list</code> - List all stashes</li>
+<li><code>git stash show</code> - Shows changes</li>
+<li><code>git stash show -p</code> - Shows detailed changes</li>
+<li><code>git stash apply</code> - Applies the latest stash from the stack (without popping it)</li>
+<li><code>git stash apply stash@{i}</code> - Apply stash i from the stack</li>
+<li><code>git stahs pop</code> - Apply the latest stash and remove it from the stack</li>
+<li><code>git stash drop</code> - Remove the stash stash@{i} from the stack</li>
+<li><code>git stash clear</code> - Remove all stashes</li>
+<li><code>git stash branch &lt;branchname&gt;</code> - Create a branch from a stash
+to stash is to keep the edited but not ready yet version of the code and get the last committed one to do something, you could merge them later of course</li>
+</ul>
+<p>to stash untracked files too, use <code>git stash -u</code> (or <code>--include-untracked</code>)
+and stashes are sorted as a stack</p>
+<h3 id="history">History</h3>
+<ul>
+<li><code>git log</code> - Show full commit history</li>
+<li><code>git log --oneline</code> - Show a summary of commits</li>
+<li><code>git log author="eyad"</code> - Show the commit history made by that user</li>
+<li><code>git log since="2 weeks ago"</code> - Show commit history up until two weeks ago</li>
+<li><code>git log --stat</code> - Show files changed per commit</li>
+<li><code>git log --graph</code> - Show graph of branch history</li>
+<li><code>git show &lt;commit&gt;</code> - Show details of a specific commit</li>
+<li><code>git diff</code> - See unstaged changes between yours and the last commit</li>
+<li><code>git diff --staged</code> - See staged changes between you last commit
+you could use / to search for a word, press n for the next match and q to quit
+you could use <code>git diff hash1 hash2</code> to compare two commits</li>
+</ul>
+<h3 id="help">Help</h3>
+<ul>
+<li><code>git help &lt;command&gt;</code> - See the manual page for a command</li>
+<li><code>git &lt;command&gt; --help</code> - See help for a command (same as above)</li>
+<li><code>git &lt;command&gt; -h</code> - See a quick summary of options</li>
+<li><code>git help --all</code> - List all possible Git commands</li>
+<li>
+<p><code>git help -g</code> - List guides and concepts</p>
+</li>
+<li>
+<p>Use the <strong>arrow keys</strong> or <code>Space</code> to scroll down, <code>b</code> to scroll up.</p>
+</li>
+<li>Type <code>/</code> followed by a word to search (e.g., <code>/option</code>), then <code>n</code> for next match.</li>
+<li>Press <code>q</code> at any time to quit the help view.</li>
+<li><code>SHIFT + G</code> to jump the end of the list</li>
+</ul>
+<h1 id="httpswwww3schoolscomgitgit_branchaspremotegithub">https://www.w3schools.com/git/git_branch.asp?remote=github</h1></p>
+                </article>
+
+            </body>
+            </html>
+        

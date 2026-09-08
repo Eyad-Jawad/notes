@@ -1,0 +1,71 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>SQL</title>
+            </head>
+
+            <body style="
+                max-width: 800px;
+                margin: 60px auto;
+                padding: 0 20px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                line-height: 1.7;
+                color: #222;
+                background: #fff;
+            ">
+
+                <article>
+                    <h1>SQL</h1>
+                    <p><p>SQL commands are not case-sensitive, but it's conventional to capitalize them for readability. You can also use new lines and white space as you like to format the command for readability. Most database systems require you to end a query with a semicolon (';')
+A SQL query can contain:
+- SQL keywords (like the ​SELECT​ and ​FROM​)
+- Column names (like the ​name​ column)
+- Table names (like the ​person​ table)
+- Wildcard characters (such as ​<code>%</code>)
+- Functions
+- Specific filtering criteria
+- etc.</p>
+<pre><code class="language-sql">SELECT * 
+FROM dbTable
+WHERE something = 'idk what'
+LIMIT 5;
+</code></pre>
+<pre><code class="language-sql">SELECT DISTINCT columnName -- this will literally return distinct elements
+FROM dbTable;
+</code></pre>
+<p>we have <code>AND</code> and <code>OR</code> in SQL</p>
+<p>When you place a <code>%</code> wildcard in a query string, the SQL system will return results that match the rest of the string exactly, and have anything (or nothing) where the wildcard is. For example, <code>'Ca%a'</code> matches <code>Canada</code> and <code>California</code>.
+The other, less commonly used wildcard, is <code>_</code>. This one means 'match the rest of the text, as long as there's exactly one character in exactly the position of the <code>_</code>, no matter what it is. So, <code>'B_b'</code> would match <code>'Bob'</code> and <code>'Bub'</code> but not <code>'Babe'</code> or <code>'Bb'</code>.</p>
+<p>SQL also supports numeric comparisons like <code>&lt;</code> (less than) and <code>&gt;</code> (greater than). You can also use the keywords <code>BETWEEN</code> and <code>AND</code> -- and all of those work with words as well as numbers.</p>
+<p>the data stored in the data base is case sensitive, so we have the functions UPPER() and LOWER():</p>
+<pre><code class="language-sql">SELECT *
+FROM dbTable
+WHERE LOWER(column) = 'idk what';
+</code></pre>
+<p>Here are a few useful aggregate functions SQL provides:
+MAX: finds the maximum value
+MIN: finds the minimum value
+SUM: calculates the sum of the specified column values
+AVG: calculates the average of the specified column values
+COUNT​: counts the number of specified column values</p>
+<p>we also have ORDER BY something ASC -- or DESC
+you could do:</p>
+<pre><code class="language-SQL">SELECT * 
+FROM table1
+JOIN table2
+  ON  something = something
+LIMIT 10;
+</code></pre>
+<p>you could also do :</p>
+<pre><code class="language-SQL">SELECT Name as n, age as a
+FROM table1;
+</code></pre>
+<p>Sometimes, you'd interacte with a database using a layer of abstraction in what's called an ORM, most common example is <a href="https://eyad-jawad.github.io/notes/Python/SQLAlchemy/SQLAlchemy%20Table.html">SQLAlchemy</a></p></p>
+                </article>
+
+            </body>
+            </html>
+        

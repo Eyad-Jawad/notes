@@ -1,0 +1,69 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Pandas</title>
+            </head>
+
+            <body style="
+                max-width: 800px;
+                margin: 60px auto;
+                padding: 0 20px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                line-height: 1.7;
+                color: #222;
+                background: #fff;
+            ">
+
+                <article>
+                    <h1>Pandas</h1>
+                    <p><h1 id="cleaning-data">Cleaning Data</h1>
+<h3 id="empty-cells">Empty cells</h3>
+<p>Empty cell can corrupt the results, that's why you're prolly better off deleting them, if the dataset is big enough, this won't effect it much</p>
+<pre><code class="language-python">
+new_df = df.dropna() # returns a new df wihout empty cells
+df.dropna(inplace=True) # changes the original df and deletes empty cells
+
+</code></pre>
+<p>or you can fill empty cells with specific values:</p>
+<pre><code class="language-python">
+df.fillna(8, inplace=True) # fill nulls with 8
+df.fillna({&quot;col_name&quot;: 8}, inplcae=True) # this fills nulls in a given col 
+                                         # rather than the whole df
+
+</code></pre>
+<p>or better yet, you can fill them with <code>mean()</code>, <code>median()</code>, or <code>mode()</code>:</p>
+<pre><code class="language-python">
+mean = df[&quot;col&quot;].mean()
+df.fillna({&quot;col&quot;: mean}, inplace=True)
+
+</code></pre>
+<h3 id="mixed-formats">Mixed Formats</h3>
+<p>you can unify formats in pandas</p>
+<pre><code class="language-python">
+df[&quot;dates&quot;] = pd.to_datetime(df[&quot;dates&quot;], format=&quot;mixed&quot;)
+
+</code></pre>
+<h3 id="wrong-data">Wrong Data</h3>
+<p>sometimes some data is exetreme, so we have to set some rules to clean the dataset:</p>
+<pre><code class="language-python">
+for x in df.index:
+    if df.loc[x, &quot;col&quot;] &gt; 100:
+        df.drop(x, inplace=True)
+
+</code></pre>
+<h3 id="duplicate-data">Duplicate Data</h3>
+<p>you can see duplicates using a method, and delething them using another:</p>
+<pre><code class="language-python">
+print(df.duplicates())
+df.drop_duplicates(inplace=True)
+
+</code></pre>
+<h1 id="httpswwww3schoolscompythonpandaspandas_correlationsasp">https://www.w3schools.com/python/pandas/pandas_correlations.asp</h1></p>
+                </article>
+
+            </body>
+            </html>
+        

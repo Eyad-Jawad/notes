@@ -1,0 +1,66 @@
+
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Fixtures</title>
+            </head>
+
+            <body style="
+                max-width: 800px;
+                margin: 60px auto;
+                padding: 0 20px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                line-height: 1.7;
+                color: #222;
+                background: #fff;
+            ">
+
+                <article>
+                    <h1>Fixtures</h1>
+                    <p><p>A fixture in Python-Pytest is a function that can kind of wrap around a test, it can execute code before a test and return a value, or even <code>yield</code> that value instead and it can execute code after a test:</p>
+<h2 id="sync-fixtures">Sync Fixtures</h2>
+<pre><code class="language-Python">
+import pytest
+
+
+@pytest.fixture
+def mock_name():
+    name = &quot;Name&quot;
+
+    yield name
+
+    delete name
+
+
+def test_something(mock_name):
+    assert name == &quot;Name
+
+</code></pre>
+<p>Of course this is an extremely simple example, but you get the idea, </p>
+<h2 id="async-fixtures">Async Fixtures</h2>
+<p><code>pytest</code> does not support async fixtures, or at least the standard package, that's why you typically need <code>pytest-asyncio</code> for async fixtures, you also need to intall it via <code>pip</code>, or <code>uv</code>:</p>
+<pre><code class="language-Python">
+import pytest
+import pytest_asyncio
+
+
+@pytest_asyncio.fixture
+async def mock_name():
+    name = await some_async_func()
+
+    return name
+
+
+@pytest.mark.asyncio
+async def test_name(mock_name):
+    assert mock_name == &quot;Name&quot;
+
+</code></pre>
+<p>And of course the test needs to be an <a href="https://eyad-jawad.github.io/notes/Python/Testing/Notes/Async%20Testing.html">Async Testing</a></p></p>
+                </article>
+
+            </body>
+            </html>
+        

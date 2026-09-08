@@ -1,36 +1,30 @@
-import markdown
 import re
-
-from ripgrep_rs import search_structured
-from rapidfuzz.fuzz import ratio
-from urllib.parse import quote
 from pathlib import Path
+from urllib.parse import quote
+
+import markdown
+from rapidfuzz.fuzz import ratio
+from ripgrep_rs import search_structured
 
 WEBSITE_LINK = "https://eyad-jawad.github.io/notes/"
 ROOT = None
 
 def main() -> None:
-    search_path = Path(__file__).resolve().parent.parent.parent
-
     global ROOT
-    ROOT = search_path
+    ROOT = Path(__file__).resolve().parent.parent.parent
 
-    index = build_index(ROOT)
-    for key, value in index.items():
+    index = build_index()
+    for value in index.values():
         for file in value:
             if file.suffix != ".md": 
                 continue
 
-            with open(file, 'r') as f:
-                text = f.read()
+            text = file.read_text()
 
             matches = search_structured(
                 patterns=[r"\[\[(.*?)\]\]"],
                 paths=[str(file)],
             )
-
-            if file.stem == '1':
-                pass
 
             for m in matches:
                 for sm in m.submatches:
@@ -47,8 +41,7 @@ def main() -> None:
                     new_link = f"[{sec}]({WEBSITE_LINK}{file_path})"
                     text = text.replace(sm.text, new_link)
 
-            html_filename = make_html_filename(file)
-            write_html_file(file, text, html_filename)
+            write_html_file(file, text)
 
 
 def breakdown_reference(reference: str) -> tuple[str, str]:
@@ -86,25 +79,23 @@ def match_file(filename: str, referncer_filename: str, index: dict[str, list[Pat
     return match[idx].relative_to(ROOT)
 
 
-def build_index(dir) -> dict[str, list[Path]]:
+def build_index() -> dict[str, list[Path]]:
     index = {}
 
-    for path in Path(dir).rglob("*"):
+    for path in Path(ROOT).rglob("*"):
         if path.is_file():
             index.setdefault(path.stem, []).append(path)
 
     return index
 
 
-def make_html_filename(file: Path):
+def write_html_file(file: Path, text: str) -> None:
+    title = file.stem
+
     if file.name == "README.md":
-        return "index.html"
+        file.rename("index.html")
 
-    return file.name[:-2] + "html"
-
-def write_html_file(file_dir: Path, text: str, filename: str):
-    path = file_dir.parent / filename
-    with open(path, 'w', encoding="utf-8") as f:
+    with open(file.with_suffix(".html"), 'w', encoding="utf-8") as f:
         body = markdown.markdown(
             text,
             extensions=[
@@ -119,7 +110,7 @@ def write_html_file(file_dir: Path, text: str, filename: str):
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{filename[:-5]}</title>
+                <title>{title}</title>
             </head>
 
             <body style="
@@ -133,24 +124,13 @@ def write_html_file(file_dir: Path, text: str, filename: str):
             ">
 
                 <article>
-                    <h1>{filename[:-5]}</h1>
+                    <h1>{title}</h1>
                     <p>{body}</p>
                 </article>
 
             </body>
             </html>
         """)
-
-
-def find_file_relative_path(filename: str, files: list[Path], root: Path) -> str:
-    for file in files:
-        if filename in str(file):
-            output = quote(str(file.relative_to(root)))
-            if not output.endswith(".md"):
-                return output
-            
-            return output[:-2] + "html"
-    return ""
 
 if __name__ == "__main__":
     main()
