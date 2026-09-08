@@ -2,6 +2,7 @@ import markdown
 import re
 
 from ripgrep_rs import search_structured
+from rapidfuzz.fuzz import ratio
 from urllib.parse import quote
 from pathlib import Path
 
@@ -9,98 +10,145 @@ WEBSITE_LINK = "https://eyad-jawad.github.io/notes/"
 
 def main() -> None:
     search_path = Path(__file__).resolve().parent.parent.parent
+    index = build_index(search_path)
+    for key, value in index.items():
+        for file in value:
+            if file.suffix != ".md": 
+                continue
 
-    notes = [p for p in Path(search_path).rglob("*") if p.is_file()]
-    for note in notes:
-        if not str(note).endswith(".md"):
-            continue
+            with open(file, 'r') as f:
+                text = f.read()
 
-        text = ""
-        with open(note, 'r') as f:
-            text = f.read()
-        
-        text = text.replace("![[", "[[")
+            images = [
+                match.submatches[0].text
+                for match in 
+                search_structured(
+                    patterns=[r"!\[\[(.*?)\]\]"],
+                    paths=[str(file)],
+                )
+            ]
 
-        filename = note.name[:-2] + "html"
-        if note.name == "README.md":
-            filename = "index.html"
-
-        file_dir = note.parent / filename
-
-        matches = search_structured(
-            patterns=[r"\[\[(.*?)\]\]"],
-            paths=[str(note)],
-        )
-
-        for m in matches:
-            for sm in m.submatches:
-                nested_match = re.match(r"\[\[(.*?)\|(.*?)\]\]", sm.text)
-
-                if nested_match:
-                    file_name = nested_match.group(1)
-                    display_name = nested_match.group(2)
-                else:
-                    nested_match = re.match(r"\[\[(.*?)\]\]", sm.text)
-                    file_name = display_name = nested_match.group(1)
-
-                hash_symbol = re.match(r"(.*?)#(.*)", file_name)
-                if hash_symbol:
-                    if file_name == display_name:
-                        display_name = hash_symbol.group(1)
-                    file_name = hash_symbol.group(1)
-
-                relative_file_name = find_file_relative_path(file_name, notes, search_path)
-
-                if hash_symbol:
-                    relative_file_name += "#" + hash_symbol.group(2)
-
-                new_link = f"[{display_name}]({WEBSITE_LINK}{relative_file_name})"
-
-                text = text.replace(sm.text, new_link)
-
-        with open(file_dir, 'w', encoding="utf-8") as f:
-            body = markdown.markdown(
-                text,
-                extensions=[
-                    "fenced_code",
-                    "tables",
-                    "toc",
-                ],
+            matches = search_structured(
+                patterns=[r"\[\[(.*?)\]\]"],
+                paths=[str(file)],
             )
-            f.write(f"""
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>{filename[:-5]}</title>
-                </head>
 
-                <body style="
-                    max-width: 800px;
-                    margin: 60px auto;
-                    padding: 0 20px;
-                    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                    line-height: 1.7;
-                    color: #222;
-                    background: #fff;
-                ">
+            for m in matches:
+                for sm in m.submatches:
+                    fir, sec = breakdown_reference(sm.text)
+                    hash_symbol, fir, sec = hash_stuff(fir, sec)
 
-                    <article>
-                        <h1>{filename[:-5]}</h1>
-                        <p>{body}</p>
-                    </article>
+                    file_path = quote(str(match_file(fir, str(file), index)))
 
-                </body>
-                </html>
-            """)
+                    if sm.text in images:
+                        text.replace(sm.text, f"[[{file_path}]]")
+                        continue
+
+                    if hash_symbol:
+                        file_path += '#' + quote(hash_symbol.group(2))
+                    
+                    new_link = f"[{sec}]({file_path})"
+                    text.replace(sm.text, new_link)
+
+            html_filename = make_html_filename(str(file))
+            write_html_file(file, text, html_filename)
+
+
+def breakdown_reference(reference: str) -> tuple[str, str]:
+    match = re.match(r"\[\[(.*?)\|(.*?)\]\]", reference)
+
+    if match:
+        return match.group(1), match.group(2)        
+
+    return reference, reference
+
+
+def hash_stuff(f: str, s: str) -> tuple[re.Match, str, str]:
+    hash_symbol = re.match(r"(.*?)#(.*)", f)
+
+    if hash_symbol is None: 
+        return None, f, s
+
+    if f == s:
+        return hash_symbol, hash_symbol.group(1), hash_symbol.group(1)
+    
+    return hash_symbol, hash_symbol.group(1), s
+
+
+def match_file(filename: str, referncer_filename: str, index: dict[str, list[Path]]) -> Path:
+    mx = 0
+    idx = 0
+    match = index.get(filename, [""])
+    for i, file in enumerate(match):
+        ra = ratio(str(file), referncer_filename)
+        if ra > mx:
+            idx = i
+        mx = max(ra, mx)
+
+    return list(match)[idx]
+
+
+def build_index(dir) -> dict[str, list[Path]]:
+    index = {}
+
+    for path in Path(dir).rglob("*"):
+        if path.is_file():
+            index.setdefault(path.stem, []).append(path)
+
+    return index
+
+
+def make_html_filename(filename: str):
+    if filename == "README.md":
+        return "index.html"
+
+    return filename[:-2] + "html"
+
+def write_html_file(file_dir: Path, text: str, filename: str):
+    path = file_dir.parent / filename
+    with open(path, 'w', encoding="utf-8") as f:
+        body = markdown.markdown(
+            text,
+            extensions=[
+                "fenced_code",
+                "tables",
+                "toc",
+            ],
+        )
+        f.write(f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>{filename[:-5]}</title>
+            </head>
+
+            <body style="
+                max-width: 800px;
+                margin: 60px auto;
+                padding: 0 20px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                line-height: 1.7;
+                color: #222;
+                background: #fff;
+            ">
+
+                <article>
+                    <h1>{filename[:-5]}</h1>
+                    <p>{body}</p>
+                </article>
+
+            </body>
+            </html>
+        """)
 
 
 def find_file_relative_path(filename: str, files: list[Path], root: Path) -> str:
     for file in files:
         if filename in str(file):
             output = quote(str(file.relative_to(root)))
-            if output.endswith(".png"):
+            if not output.endswith(".md"):
                 return output
             
             return output[:-2] + "html"

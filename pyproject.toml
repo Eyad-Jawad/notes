@@ -1,7 +1,7 @@
 [project]
 name = "programming"
 version = "0.1.0"
-description = "Add your description here"
+description = "A script that turns obsidian markdown files into html and puts them a website."
 readme = "README.md"
 authors = [
     { name = "Eyad Jawad", email = "ayadmansr@gmail.com" }
@@ -10,6 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "markdown>=3.10.3",
     "python-ripgrep>=0.0.9",
+    "rapidfuzz>=3.14.6",
     "ripgrep>=15.1.0",
     "ripgrep-rs>=0.4.2",
 ]
