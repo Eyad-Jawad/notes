@@ -55,7 +55,7 @@ def main() -> None:
                     new_link = f"[{sec}]({WEBSITE_LINK}{file_path})"
                     text = text.replace(sm.text, new_link)
 
-            html_filename = make_html_filename(str(file))
+            html_filename = make_html_filename(file)
             write_html_file(file, text, html_filename)
 
 
