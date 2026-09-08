@@ -25,7 +25,7 @@ def main() -> None:
                 text = f.read()
 
             images = [
-                match.submatches[0].text
+                match.submatches[0].text[1:]
                 for match in 
                 search_structured(
                     patterns=[r"!\[\[(.*?)\]\]"],
@@ -43,7 +43,9 @@ def main() -> None:
                     fir, sec = breakdown_reference(sm.text)
                     hash_symbol, fir, sec = hash_stuff(fir, sec)
 
-                    file_path = quote(str(match_file(fir, str(file), index)))[:-2] + "html"
+                    file_path = quote(str(match_file(fir, str(file), index)))
+                    if file_path.endswith(".md"):
+                        file_path = file_path[:-2] + "html"
 
                     if sm.text in images:
                         text.replace(sm.text, f"[[{file_path}]]")
