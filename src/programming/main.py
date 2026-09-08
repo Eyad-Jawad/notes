@@ -103,11 +103,11 @@ def build_index(dir) -> dict[str, list[Path]]:
     return index
 
 
-def make_html_filename(filename: str):
-    if filename == "README.md":
+def make_html_filename(file: Path):
+    if file.name == "README.md":
         return "index.html"
 
-    return filename[:-2] + "html"
+    return file.name[:-2] + "html"
 
 def write_html_file(file_dir: Path, text: str, filename: str):
     path = file_dir.parent / filename
