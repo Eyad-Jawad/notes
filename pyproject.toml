@@ -11,6 +11,7 @@ dependencies = [
     "markdown>=3.10.3",
     "rapidfuzz>=3.14.6",
     "ripgrep-rs>=0.4.2",
+    "types-markdown>=3.10.2.20260712",
 ]
 
 [project.scripts]

@@ -24,5 +24,4 @@ Other scattered notes:
 3. [Docker](https://eyad-jawad.github.io/notes/Docker)  
 
 ---
-TOOD: Make the code better  
 `- Eyad`
