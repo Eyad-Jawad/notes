@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 from urllib.parse import quote
+from collections import defaultdict
 
 import markdown
 from rapidfuzz.fuzz import ratio
@@ -9,6 +10,7 @@ from ripgrep_rs import search_structured
 WEBSITE_LINK = "https://eyad-jawad.github.io/notes/"
 ROOT = None
 
+
 def main() -> None:
     global ROOT
     ROOT = Path(__file__).resolve().parent.parent.parent
@@ -16,7 +18,7 @@ def main() -> None:
     index = build_index()
     for value in index.values():
         for file in value:
-            if file.suffix != ".md": 
+            if file.suffix != ".md":
                 continue
 
             text = file.read_text()
@@ -36,8 +38,8 @@ def main() -> None:
                         file_path = file_path[:-2] + "html"
 
                     if hash_symbol:
-                        file_path += '#' + quote(hash_symbol.group(2))
-                    
+                        file_path += "#" + quote(hash_symbol.group(2))
+
                     new_link = f"[{sec}]({WEBSITE_LINK}{file_path})"
                     text = text.replace(sm.text, new_link)
 
@@ -48,7 +50,7 @@ def breakdown_reference(reference: str) -> tuple[str, str]:
     match = re.match(r"\[\[(.*?)\|(.*?)\]\]", reference)
 
     if match:
-        return match.group(1), match.group(2)        
+        return match.group(1), match.group(2)
 
     return reference[2:-2], reference[2:-2]
 
@@ -56,16 +58,18 @@ def breakdown_reference(reference: str) -> tuple[str, str]:
 def hash_stuff(f: str, s: str) -> tuple[re.Match, str, str]:
     hash_symbol = re.match(r"(.*?)#(.*)", f)
 
-    if hash_symbol is None: 
+    if hash_symbol is None:
         return None, f, s
 
     if f == s:
         return hash_symbol, hash_symbol.group(1), hash_symbol.group(1)
-    
+
     return hash_symbol, hash_symbol.group(1), s
 
 
-def match_file(filename: str, referncer_filename: str, index: dict[str, list[Path]]) -> Path:
+def match_file(
+    filename: str, referncer_filename: str, index: dict[str, list[Path]]
+) -> Path:
     mx = 0
     idx = 0
     target_file = Path(filename)
@@ -81,11 +85,11 @@ def match_file(filename: str, referncer_filename: str, index: dict[str, list[Pat
 
 
 def build_index() -> dict[str, list[Path]]:
-    index = {}
+    index = defaultdict(list)
 
     for path in Path(ROOT).rglob("*"):
         if path.is_file():
-            index.setdefault(path.stem, []).append(path)
+            index[path.stem].append(path)
 
     return index
 
@@ -93,10 +97,11 @@ def build_index() -> dict[str, list[Path]]:
 def write_html_file(file: Path, text: str) -> None:
     title = file.stem
 
-    if file.name == "README.md":
-        file.rename("index.html")
+    f = file.with_suffix(".html")
+    if f.stem == "README":
+        f = f.with_stem("index")
 
-    with open(file.with_suffix(".html"), 'w', encoding="utf-8") as f:
+    with open(f, "w", encoding="utf-8") as f:
         body = markdown.markdown(
             text,
             extensions=[
@@ -132,6 +137,7 @@ def write_html_file(file: Path, text: str) -> None:
             </body>
             </html>
         """)
+
 
 if __name__ == "__main__":
     main()

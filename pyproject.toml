@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "A script that turns obsidian markdown files into html and puts them a website."
 readme = "README.md"
 authors = [
-    { name = "Eyad Jawad", email = "ayadmansr@gmail.com" }
+    { name = "Eyad Jawad" }
 ]
 requires-python = ">=3.12"
 dependencies = [
@@ -22,6 +22,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "black>=26.5.1",
     "mypy>=2.3.1",
     "ruff>=0.16.6",
 ]
