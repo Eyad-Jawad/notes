@@ -1,7 +1,7 @@
 # C Note Folders
 
 1. [[General C Notes]]
-2. [[C accordding to the roadmap.sh and knowledge skips|C By Roadmap.sh]]
+2. [[C accordding to the roadmap dot sh and knowledge skips|C By Roadmap.sh]]
 
 # Libraries
 

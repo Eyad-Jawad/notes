@@ -24,7 +24,5 @@ Other scattered notes:
 3. [Docker](https://eyad-jawad.github.io/notes/Docker)  
 
 ---
-FIXME: Images  
-FIXME: Pandas in Pandas Table error in relative file_name func  
 TOOD: Make the code better  
 `- Eyad`
