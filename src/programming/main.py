@@ -21,6 +21,9 @@ def main() -> None:
     )
 
     for file in md_files:
+        if file.stem == '1':
+            pass
+    
         text = file.read_text()
 
         matches = search_structured(
@@ -51,7 +54,7 @@ def breakdown_reference(reference: str) -> tuple[str, str]:
     ref = reference[2:-2]
     file_name, separator, display_name = ref.partition("|")
 
-    if separator:
+    if not separator:
         display_name = file_name
 
     return file_name, display_name
