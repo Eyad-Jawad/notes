@@ -43,6 +43,9 @@ def main() -> None:
                     fir, sec = breakdown_reference(sm.text)
                     hash_symbol, fir, sec = hash_stuff(fir, sec)
 
+                    if ".png" in sm.text:
+                        pass
+
                     file_path = quote(str(match_file(fir, str(file), index)))
                     if file_path.endswith(".md"):
                         file_path = file_path[:-2] + "html"
@@ -85,7 +88,8 @@ def hash_stuff(f: str, s: str) -> tuple[re.Match, str, str]:
 def match_file(filename: str, referncer_filename: str, index: dict[str, list[Path]]) -> Path:
     mx = 0
     idx = 0
-    match = index.get(filename, [ROOT])
+    target_file = Path(filename)
+    match = index.get(target_file.stem, [ROOT])
     for i, file in enumerate(match):
         ra = ratio(str(file), referncer_filename)
         if ra > mx:
