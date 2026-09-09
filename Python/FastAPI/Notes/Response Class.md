@@ -5,7 +5,7 @@ You can use `response_class` in  `FastAPI` to tell it how to contruct the return
 from fastapi.responses import HTMLResponse
 
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def get_root():
 	return "<h1>Hi</h1>"
 
