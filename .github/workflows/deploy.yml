@@ -33,6 +33,13 @@ jobs:
       - name: Generate HTML
         run: uv run python src/programming/main.py
 
+      - name: Delete Markdown files from this commit
+        run: |
+          git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" \
+            | grep -E '\.md$' \
+            | grep -v '^README\.md$' \
+            | xargs -r git rm --ignore-unmatch
+
       - name: Commit generated files
         run: |
           git config user.name "github-actions[bot]"

@@ -1,3 +1,6 @@
 1. [[FaseAPI|Summary by the docs]]
 2. [[Rate Limits]]
-3. [[Routers|Handlling multiple files' paths]]
+3. [[Routers|Routers: What to do with app when you have multiple files?]]
+4. [[Stacking Routes|Stacking Routes: How to make two paths share the same function]]
+5. [[Response Class|Response Class: How to display return values as HTML instead of JSON]]
+6. [[How To Hide Non-API Routes From The Docs]]

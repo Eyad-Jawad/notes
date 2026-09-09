@@ -1,4 +1,4 @@
-Besides (or as well as) the `printf` string formatting ([[Printf()]]), there are ways to format a string itself, not while printing it:
+**Besides** (or as well as) the `printf` string formatting ([[Printf()]]), there are ways to format a string itself, not while printing it:
 
 ### sprintf
 

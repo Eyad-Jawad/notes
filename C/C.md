@@ -11,12 +11,4 @@
 
 # Topics
 
-1. [[Beej''s Guide | Network Programming By Beej]]
-
-
-# Projects
-
-1. [[C Scrapper|Scrapping Novels]]
-2. [[Elloc]]
-
-
+1. [[Beej''s Guide | Network Porogramming By Beej]]

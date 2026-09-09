@@ -5,4 +5,6 @@
 5. [[Assigning Structs]]
 6. [[Enums]]
 7. [[Unions]]
+8. [[calloc]]
+9. [[realloc]]
 
