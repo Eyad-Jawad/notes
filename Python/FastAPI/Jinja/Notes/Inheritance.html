@@ -1,0 +1,44 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Inheritance</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Inheritance</h1>
+                <p>You can set some surronding code to be wrapped in <code>HTML</code> code in <code>jinja</code> to make things eaiser, first the parent file:</p>
+<pre><code class="language-HTML">
+&lt;!-- parent.html ---&gt;
+
+&lt;h1&gt;Some contect&lt;/h1&gt;
+
+{% block blockname %}
+{% endblock blockname %}
+
+</code></pre>
+<p>Then the child file:</p>
+<pre><code class="language-HTML">
+{% extends &quot;parent.html&quot; %}
+{% block blockname %}
+
+    &lt;h1&gt;Some boilprete&lt;/h1&gt;
+
+{% endblock blockname %}
+
+</code></pre>
+            </article>
+
+        </body>
+        </html>

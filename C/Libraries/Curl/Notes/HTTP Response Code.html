@@ -1,0 +1,43 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>HTTP Response Code</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>HTTP Response Code</h1>
+                <h2 id="the-function">The Function</h2>
+<p>You should check on the HTTP response code when executing some curl code, and to do that call:</p>
+<pre><code class="language-C">
+long status = 0;
+curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &amp;status);
+
+.
+.
+.
+if (status == 200) { // Should be a success
+    ...
+} else if (status == 429) { // Rate limit
+    ...
+}
+.
+.
+.
+
+</code></pre>
+            </article>
+
+        </body>
+        </html>

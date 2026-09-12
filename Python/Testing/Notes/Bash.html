@@ -1,0 +1,41 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Bash</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Bash</h1>
+                <p>You can use a bash script to run, say, an integration test, and check its return value with a normal python test:</p>
+<pre><code class="language-Pyhton">
+import subprocess
+
+
+def test_integration():
+    result = subprocess.run(
+        [&quot;bash&quot;, &quot;path/to/script.sh&quot;], 
+        capture_out=True, 
+        text=True,
+        check=False, # This makes it so it doesn't crash right away if the script doesn't return 0
+    )
+
+    assert result.returncode == 0, result.stderr
+
+</code></pre>
+<p>writing <code>, result.stderr</code> is a neat little trick that will print the error if this specific line fails.</p>
+            </article>
+
+        </body>
+        </html>

@@ -1,0 +1,35 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Mount Directories</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Mount Directories</h1>
+                <p>To use files/directories that are independent from the app, but are needed:</p>
+<pre><code class="language-Python">
+app.mount(&quot;/file&quot;, name=&quot;app&quot;)
+
+</code></pre>
+<p>And in case they are static files:</p>
+<pre><code class="language-Python">
+from fastapi.staticfiles import StaticFiles
+
+app.mount(&quot;/dir&quot;, StaticFiles(directory=&quot;static&quot;), name=&quot;static&quot;)
+</code></pre>
+            </article>
+
+        </body>
+        </html>

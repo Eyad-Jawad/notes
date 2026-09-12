@@ -1,0 +1,79 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>How to write into memory</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>How to write into memory</h1>
+                <h2 id="memory-struct">Memory Struct</h2>
+<p>First you need a struct to write into:</p>
+<pre><code class="language-C">
+struct MemoryStruct {
+    char *memory;
+    size_t size;
+};
+
+</code></pre>
+<h2 id="the-function">The Function</h2>
+<p>Then you need a function that is fed to the curl to handle the writing and the sort:</p>
+<pre><code class="language-C">
+size_t write_cb(char *contents, size_t size, size_t nmemb, void *userp) {
+    size_t realsize = size * nmemb;
+    struct MemoryStruct *mem = (struct MemoryStruct *) userp;
+
+    char *ptr = realloc(mem-&gt;memory, mem-&gt;size + realsize + 1);
+    if (!ptr) {
+        printf(&quot;not enough memory (realloc failed, returned NULL)\n&quot;);
+        return 0;
+    }
+
+    mem-&gt;memory = ptr;
+    memcpy(&amp;(mem-&gt;memory[mem-&gt;size]), contents, realsize);
+    mem-&gt;size += realsize;
+    mem-&gt;memory[mem-&gt;size] = 0;
+
+    return realsize;
+}
+
+</code></pre>
+<p><code>write_cb</code>: <code>write callback</code>
+<code>nmemb</code>: <code>number of members</code>: number of elements, and <code>size</code> is the size of each element
+<code>userp</code>: <code>user pointer</code>: It points to the pointer of the user bellow</p>
+<p>Then you should tell the curl how to do it:</p>
+<pre><code class="language-C">struct MemoryStruct chunk;
+chunk.memory = malloc(1);
+chunk.size = 0;
+
+.
+.
+.
+
+curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_cb);
+curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) &amp;chunk);
+
+.
+.
+.
+
+// after using chunk.memory
+free(chunk.memory);
+
+</code></pre>
+<p>be careful of freeing <code>chunk.memory</code> before actually using it</p>
+            </article>
+
+        </body>
+        </html>

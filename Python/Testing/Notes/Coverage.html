@@ -1,0 +1,35 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Coverage</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Coverage</h1>
+                <p>It is a tool that reports the coverage of tests in <code>pytest</code>, to use it you have to install <code>pytest-cov</code> via <code>pip</code> or <code>uv</code>, then you can configure it in <code>pyproject.toml</code>:</p>
+<pre><code class="language-toml">
+[tool.pytest.ini_options]
+testpaths = [&quot;src/tests&quot;]
+addopts = &quot;--cov=.&quot;
+
+[tool.coverage.run]
+source = [&quot;.&quot;]
+omit = [&quot;src/tests/*&quot;]
+
+</code></pre>
+            </article>
+
+        </body>
+        </html>

@@ -1,0 +1,45 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Syntax</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Syntax</h1>
+                <p>The syntax involves two elements:
+1. <code>{% keyword %}
+2.</code>{{ variable }}`</p>
+<p>Some basic ones:</p>
+<h4 id="if">If</h4>
+<pre><code class="language-HTML">
+{% if title %}
+    &lt;title&gt; site {{ title }} &lt;/title&gt;
+{% else %}
+    &lt;title&gt; site &lt;/title&gt;
+{% endif %}
+
+</code></pre>
+<h4 id="for">For</h4>
+<pre><code class="language-HTML">
+{% for x in agrs %}
+    &lt;h1&gt; {{ x }} &lt;/h1&gt;
+{% endfor %}
+
+</code></pre>
+<p>There's also the <code>block</code> keyword which is used in <a href="https://eyad-jawad.github.io/notes/Python/FastAPI/Jinja/Notes/Inheritance.html">Inheritance</a></p>
+            </article>
+
+        </body>
+        </html>

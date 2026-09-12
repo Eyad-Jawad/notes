@@ -1,0 +1,59 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>url_for</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>url_for</h1>
+                <p>You use <code>url_for</code> to reference to routes and avoid hardcoding them, you can use fastapi function names, or the names you set for some routes.</p>
+<h2 id="for-functions">For Functions</h2>
+<pre><code class="language-Python">
+@app.get(&quot;/route&quot;)
+def func():
+    return 1
+
+</code></pre>
+<p>Then in the <code>HTML</code> files:</p>
+<pre><code class="language-HTML">
+&lt;a href=&quot;{{ url_for('func') }}&quot;&gt; something &lt;/a&gt;
+
+</code></pre>
+<p>Be careful with the quotes, there another case where two routes share the same function:</p>
+<pre><code class="language-Python">
+@app.get(&quot;/route1)
+@app.get(&quot;/route2)  # &lt;-- Takes precedence
+def func():
+    return 1
+
+</code></pre>
+<p>To just avoid cases such as these and make things clear, do pass a <code>name</code> to the decorators:</p>
+<pre><code class="language-Python">
+@app.get(&quot;/route1&quot;, name=&quot;func&quot;)  # &lt;-- Now this takes precedence
+@app.get(&quot;/route2&quot;, name=&quot;func1)
+def func():
+    return 1
+
+</code></pre>
+<h2 id="for-directories">For Directories</h2>
+<p>You can also use it for directories on the app, but you must <a href="https://eyad-jawad.github.io/notes/Python/FastAPI/Notes/Mount%20Directories.html">mount</a> them first:</p>
+<pre><code class="language-HTML">
+&lt;a href=&quot;{{ url_for('/some_dir', path='another_dir/file.ico') }}&gt;&lt;/a&gt;
+
+</code></pre>
+            </article>
+
+        </body>
+        </html>

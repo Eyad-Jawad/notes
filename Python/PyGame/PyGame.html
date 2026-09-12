@@ -1,0 +1,55 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>PyGame</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>PyGame</h1>
+                <h1 id="pygame">PyGame</h1>
+<p>import pygame obviously to use it</p>
+<p>from pygame.locals import * to access constants</p>
+<p>to start the pygame:</p>
+<p>pygame.init()</p>
+<p>and the screen:</p>
+<p>x = pygame.display.set_mode((width, height))</p>
+<p>then you need a while loop to update the display</p>
+<p>to not make the system break use:</p>
+<p>for event in pygame.event.get():</p>
+<p>if event.type == pygame.QUIT:</p>
+<p>and there a bunch of other, but as for keys we say:</p>
+<p>event.key and then use it with pygame keys</p>
+<p>pygame.quit()</p>
+<p>sys.exit()</p>
+<p>and inside the while loop say:</p>
+<p>pygame.display.update()</p>
+<p>you can change the name (title) of the window above in the code:</p>
+<p>pygame.display.set_caption(’lol’)</p>
+<p>you can set a ceiling to the speed of the game by using a clock:</p>
+<p>x = pygame.time.Clock()</p>
+<p>and them inside the while loop:</p>
+<p>x.tick(the frame rate)</p>
+<p>you can load an image by saying:</p>
+<p>x = pygame.image.load(’name.png’)</p>
+<p>and to load it say on a surface or a screen say:</p>
+<p>screen.blit(x, coordinates)</p>
+<p>to change the color of the screen say:</p>
+<p>x.fill((255, 255, 255))</p>
+<p>to draw a ball:</p>
+<p>pygame.draw.circle(screen, ball_color, ball_position, ball_radius)</p>
+            </article>
+
+        </body>
+        </html>

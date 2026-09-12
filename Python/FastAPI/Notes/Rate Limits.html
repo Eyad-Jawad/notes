@@ -1,0 +1,74 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Rate Limits</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Rate Limits</h1>
+                <p>Rate limits in <code>FastAPI</code> calls a function that has internal logs, if the logs say a user requested more than the limit, an error is raised. We can use <a href="https://eyad-jawad.github.io/notes/Python/Notes/Redis.html">Redis</a> for this, alongside some basic code:</p>
+<pre><code class="language-Python">
+import time
+import redis
+
+from fastapi import HTTPException, Request, status
+
+r = redis.Redis()
+
+def rate_limiter(
+    limit: int = 30,
+    window: int = 60,  # seconds
+):
+    async def dependency(request: Request):
+        api_key = request.headers.get(&quot;access_key&quot;) # if the user has some kind of key
+        identifier = api_key or ( # else provide a fallback: IP address
+            request.client.host if request.client else None # Which can be None
+        )
+        if identifier is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=&quot;User has no ip or token.&quot;,
+            )
+
+        now = int(time.time())
+        window_start = now - (now % window)
+
+        key = f&quot;rl:{identifier}:{window_start}&quot;
+        current = r.incr(key)
+
+        if current == 1:
+            r.expire(key, window)
+
+        elif current &gt; limit:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=&quot;Rate limit exceeded, please try again later.&quot;,
+            )
+
+    return dependency
+
+</code></pre>
+<p>And to use the function above:</p>
+<pre><code class="language-Python">
+from fastapi import Depends
+
+
+app.get(&quot;/&quot;, dependencies=[Depends(rate_limiter())])
+
+</code></pre>
+            </article>
+
+        </body>
+        </html>

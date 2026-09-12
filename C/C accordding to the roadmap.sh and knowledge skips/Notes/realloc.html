@@ -1,0 +1,43 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>realloc</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>realloc</h1>
+                <p>This function is used to change the allocated size of a previously allocated memory in C, you can use it to request more memory, or less memory, it copies the data of the pointer you pass into the new address:</p>
+<pre><code class="language-C">
+#include &lt;stdlib.h&gt;
+
+int *ptr = malloc(sizeof(int));
+if (ptr == NULL) return 1;
+
+*ptr = 1;
+
+double *new_ptr = realloc(ptr, sizeof(double));
+if (new_ptr == NULL) return 1;
+
+*new_ptr = 1.1;
+
+free(new_ptr);
+return 0;
+
+</code></pre>
+<p>You must remeber to <code>free</code> the reallocated memory, the first memory is "freed", it can be that it has the same address and you can still acess it, but you should think that it is always gone.</p>
+            </article>
+
+        </body>
+        </html>

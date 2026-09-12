@@ -1,0 +1,32 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>How To Hide Non-API Routes From The Docs</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>How To Hide Non-API Routes From The Docs</h1>
+                <p>To hide routes from the auto-generated docs in <code>FastAPI</code>, you only need to pass one argument:</p>
+<pre><code class="language-Python">
+@app.get(&quot;/&quot;, response_class=HTMLResponse, include_in_schema=False)
+def get_root():
+    return 1
+
+</code></pre>
+<p>You can notice that I have also passed <a href="https://eyad-jawad.github.io/notes/Python/FastAPI/Notes/Response%20Class.html">response_class=HTMLResponse</a>, that's because you'd typically hide user targeted routes from the docs, and <code>HTML</code> is typically for users.</p>
+            </article>
+
+        </body>
+        </html>

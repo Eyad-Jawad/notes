@@ -1,0 +1,55 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Threading</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Threading</h1>
+                <p>You'd use the library <code>pthread.h</code>:</p>
+<pre><code class="language-C">#define THREAD_COUNT 4
+
+...
+
+pthread_t threads[THREAD_COUNT];
+for (int i = 0; i &lt; THREAD_COUNT; i++) {
+    pthread_create(&amp;thread[i], nullptr, function, arguments);
+}
+
+for (int i = 0; i &lt; THREAD_COUNT; i++) {
+    pthread_join(thread[i], nullptr); // wait for them to terminate
+}
+
+</code></pre>
+<p>The function should have a return type of <code>void *</code> and returns <code>NULL</code>, and you'd use <a href="https://eyad-jawad.github.io/notes/C/C%20accordding%20to%20the%20roadmap.sh%20and%20knowledge%20skips/Notes/Atomic.html">Atomic</a> with threads and stuff, and btw to set a condition on which the thread gets terminated do:</p>
+<pre><code class="language-C">
+#define TASK_COUNT x
+
+...
+
+if (someVariable &gt;= TASK_COUNT) {
+    return NULL;
+}
+
+</code></pre>
+<p>The function should look something like this:</p>
+<pre><code class="language-C">
+void *function(void *args) {... return NULL;}
+
+</code></pre>
+            </article>
+
+        </body>
+        </html>

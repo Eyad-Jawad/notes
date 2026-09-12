@@ -1,0 +1,34 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Response Class</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Response Class</h1>
+                <p>You can use <code>response_class</code> in  <code>FastAPI</code> to tell it how to contruct the return value, the default is <code>json</code>, but you can also return html:</p>
+<pre><code class="language-Python">
+from fastapi.responses import HTMLResponse
+
+
+@app.get(&quot;/&quot;, response_class=HTMLResponse)
+def get_root():
+    return &quot;&lt;h1&gt;Hi&lt;/h1&gt;&quot;
+
+</code></pre>
+            </article>
+
+        </body>
+        </html>

@@ -1,0 +1,71 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Variadic Functions</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Variadic Functions</h1>
+                <p>Variadic functions are functions that accept a varying number of arugments, like <code>pirntf</code> and <code>scanf</code>
+You need to include <code>stdarg.h</code> which provides the macros:</p>
+<table>
+<thead>
+<tr>
+<th>Methods</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.tutorialspoint.com/c_standard_library/c_macro_va_start.htm">va_start</a>(va_list ap, arg)</td>
+<td>Arguments after the last fixed argument are stored in the va_list.</td>
+</tr>
+<tr>
+<td><a href="https://www.tutorialspoint.com/c_standard_library/c_macro_va_arg.htm">va_arg</a>(va_list ap, type)</td>
+<td>Each time, the next argument in the variable list va_list and coverts it to the given type, till it reaches the end of list.</td>
+</tr>
+<tr>
+<td>va_copy(va_list dest, va_list src)</td>
+<td>This creates a copy of the arguments in va_list</td>
+</tr>
+<tr>
+<td><a href="https://www.tutorialspoint.com/c_standard_library/c_macro_va_end.htm">va_end</a>(va_list ap)</td>
+<td>This ends the traversal of the variadic function arguments. As the end of va_list is reached, the list object is cleaned up.</td>
+</tr>
+</tbody>
+</table>
+<p>So, a function would look something like this:</p>
+<pre><code class="language-C">
+int sum(int n, ...) {
+    va_list args;
+    int s = 0;
+
+    va_start(args, n);
+
+    for (int i = 0; i &lt; n; i++) {
+        s += va_arg(args, int);
+    }
+
+    va_end(args);
+
+    return s;
+}
+
+</code></pre>
+<p><code>n</code> in the function's parameters is the numer of arguments that will be passed</p>
+            </article>
+
+        </body>
+        </html>

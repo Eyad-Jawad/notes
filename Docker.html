@@ -1,0 +1,116 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Docker</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Docker</h1>
+                <p>you already know about images, and containers, so we'll discuss commands only</p>
+<p>to run an image and make a container do:</p>
+<pre><code class="language-bash">
+docker run image
+docker run hello-world
+
+</code></pre>
+<p>to download an image do:</p>
+<pre><code class="language-bash">
+docker pull image
+docker pull busy-box
+
+</code></pre>
+<p>to know the images you have run:</p>
+<pre><code class="language-bash">
+docker images
+
+</code></pre>
+<p>to know the containers you have run:</p>
+<pre><code class="language-bash">
+docker ps # shows active only
+docker ps -a # shows all
+
+</code></pre>
+<p>and generally you should delete them afterwards by doing this:</p>
+<pre><code class="language-bash">
+docker prune
+docker rm image_hash
+docker rm $(docker ps -a -q -f status=exited)
+
+</code></pre>
+<p>or you could make them be autodeleted:</p>
+<pre><code class="language-bash">
+docker run image --rm
+
+</code></pre>
+<p>to run the container and not be bound be it (attached) use this to make it detached:</p>
+<pre><code class="language-bash">
+docker run -it image # attached
+docker run -d image # detached
+
+</code></pre>
+<p>and you can (and should) give it a name:</p>
+<pre><code class="language-bash">
+docker run -d image --name cont
+docker stop cont # we use the name to stop the container
+
+</code></pre>
+<p>base image is standalone, child image builds on base images</p>
+<p>to create an image, we make a dockerfile, and write the next:</p>
+<pre><code class="language-dockerfile">
+# Select the base image
+FROM python:3.14 
+
+# Set the working directory for the container
+WORKDIR /usr/src/app 
+
+# Copy all the files to the container
+COPY . . 
+
+# This one is clear
+RUN pip install --no-cache -r requirements.txt 
+
+# If you need a port to run the container on (like a website)
+# which is where docker is mostly used, do:
+EXPOSE 3940 
+
+# run the command
+CMD [&quot;python&quot;, &quot;./app.py&quot;]
+
+</code></pre>
+<p>btw <code>./</code> as in <code>cd ./x</code></p>
+<p>You can specify <code>CMD</code> instructions using <a href="https://docs.docker.com/reference/dockerfile#shell-and-exec-form">shell or exec forms</a>:
+- <code>CMD ["executable","param1","param2"]</code> (exec form)
+- <code>CMD ["param1","param2"]</code> (exec form, as default parameters to <code>ENTRYPOINT</code>)
+- <code>CMD command param1 param2</code> (shell form)</p>
+<p>and then to build it you'd do:</p>
+<pre><code class="language-bash">
+docker build -t myContainer .
+
+</code></pre>
+<p>to pass args when running a docker do:</p>
+<pre><code class="language-bash">
+docker run myContainer arg1 arg2
+
+</code></pre>
+<p>but you'd have to change the exec instruction of <code>CMD</code> to :</p>
+<pre><code class="language-dockerfile">
+ENTRYPOINT [&quot;python&quot;, &quot;./app.py&quot;]
+
+</code></pre>
+<p>BTW there's something called <code>.dockderignore</code> which is for the <code>COPY . .</code> to ignore</p>
+            </article>
+
+        </body>
+        </html>

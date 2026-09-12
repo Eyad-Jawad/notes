@@ -1,0 +1,54 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Random Notes</title>
+        </head>
+
+        <body style="
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: #222;
+            background: #fff;
+        ">
+
+            <article>
+                <h1>Random Notes</h1>
+                <h3 id="fprintf">fprintf</h3>
+<p>If you call fprintf with a string you don't know about, you should call it like this:</p>
+<pre><code class="language-C">
+fprintf(file, &quot;%s&quot;, str);
+
+</code></pre>
+<p>because if the string has some formatting characters bad things will happen, in this specific case you should call <code>fputs</code></p>
+<h3 id="buffer_len-alloc_len">buffer_len &lt; alloc_len</h3>
+<p>Sometimes the length of the string can be smaller than the length of the allocated string, this happens when <code>'\0'</code> is present before the actual end of the allocated memory, which is quite normal. This allows some interesting functions like this one which removes occurrences of <code>&lt;p&gt;</code> and replaces <code>&lt;/p&gt;</code> with <code>'\n'</code>:</p>
+<pre><code class="language-C">
+void cleanChapter(char *txtChapter) {
+    char *src = txtChapter;
+    char *dst = txtChapter;
+
+    while (*src) {
+        if (strncmp(src, &quot;&lt;p&gt;&quot;, 3) == 0) {
+            src += 3;
+        } else if (strncmp(src, &quot;&lt;/p&gt;&quot;, 4) == 0) {
+            *dst++ = '\n';
+            src += 4;
+        } else {
+            *dst++ = *src++;
+        }
+    } 
+    *dst = '\0';
+}
+
+</code></pre>
+<h3 id="sleep">Sleep</h3>
+<p>The function <code>sleep</code> which is very useful, lives in <code>unistd.h</code> and takes seconds as an arugment</p>
+            </article>
+
+        </body>
+        </html>
